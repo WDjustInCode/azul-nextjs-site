@@ -29,8 +29,8 @@
   display: block;
   height: 40px;
   width: auto;
-  image-rendering: auto;
-  -ms-interpolation-mode: nearest-neighbor;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .hamburger {

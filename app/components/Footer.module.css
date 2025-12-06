@@ -33,8 +33,9 @@
   height: auto;
   width: auto;
   max-width: 200px;
-  image-rendering: auto;
-  -ms-interpolation-mode: nearest-neighbor;
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .contactInfo {
