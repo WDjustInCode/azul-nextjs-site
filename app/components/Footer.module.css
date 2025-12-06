@@ -33,11 +33,9 @@
   height: auto;
   width: auto;
   max-width: 200px;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  transform: translateZ(0);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .contactInfo {
