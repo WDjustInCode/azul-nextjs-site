@@ -21,7 +21,6 @@ export default function WhatSetsUsApartSection() {
           margin-bottom: 50px;
           color: #002147;
           letter-spacing: 0.5px;
-          max-width: 650px;
         }
 
         .azul-grid {
@@ -82,14 +81,15 @@ export default function WhatSetsUsApartSection() {
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
           font-size: 22px;
+          line-height: 1.4;
           margin-bottom: 8px;
-          letter-spacing: 0.7px;
+          letter-spacing: 0.5px;
         }
 
         .azul-card p {
           font-size: 16px;
           font-weight: 300;
-          line-height: 1.6;
+          line-height: 1.4;
           letter-spacing: 0.3px;
           max-width: 50%;
         }
@@ -118,13 +118,13 @@ export default function WhatSetsUsApartSection() {
         }
       `}</style>
 
-      <h2 className="azul-title">Quality you can swim in</h2>
+      <h2 className="azul-title">Quality you can depend on</h2>
 
       <div className="azul-grid">
         <div className="azul-card azul-card--wide">
           <img src="https://img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/justInception_generate_a_cinematic_image_of_a_.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:2558,m" alt="Pool service" />
           <div className="azul-card-content">
-            <h3>We Don't Just Clean Your Pool.<br />We Give You Peace of Mind.</h3>
+            <h3>We Don't Just Clean Your Pool<br />We Give You Peace of Mind</h3>
             <p>Every visit includes a photo and update, so you always know what got done.</p>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function WhatSetsUsApartSection() {
         <div className="azul-card azul-card--standard">
           <img src="//img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Untitled-13.jpg/:/rs=w:2000,cg:true" alt="Safe water" />
           <div className="azul-card-content">
-            <h3>Water Your Family <br /> Will Love.</h3>
+            <h3>Water Your Family <br /> Will Love</h3>
             <p>Clean, comfortable water without irritation. We keep your pool balanced and swim-ready.</p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function WhatSetsUsApartSection() {
         <div className="azul-card azul-card--standard">
           <img src="//img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Untitled-10.jpg/:/rs=w:2000,cg:true" alt="Guarantee" />
           <div className="azul-card-content">
-            <h3>If Anything Goes Wrong, We've Got You.</h3>
+            <h3>If Anything Goes Wrong, <br /> We've Got You</h3>
             <p>If your pool turns cloudy or green, we fix it for free. No stress, no hassle.</p>
           </div>
         </div>

@@ -172,7 +172,7 @@ export default function FAQSection() {
       <div className="azul-faq-inner">
         <div className="azul-faq-container">
           <div className="azul-faq-header">
-            <h2 className="azul-faq-heading">Questions? Thought you'd never ask</h2>
+            <h2 className="azul-faq-heading">Frequent Questions</h2>
           </div>
 
           <div className="azul-faq-list">
