@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 267.75" shape-rendering="geometricPrecision">
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 267.75" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality">
   <defs>
     <filter id="drop-shadow-1" x="86.54" y="2.88" width="412" height="184" filterUnits="userSpaceOnUse">
       <feOffset dx="0" dy="0"/>
@@ -40,7 +40,7 @@
         <polyline points="471.04 125.21 546.78 96.51 471.04 67.97" style="fill: none; fill-rule: evenodd; stroke: #fff; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 2.5px;"/>
       </g>
       <g>
-        <g style="filter: url(#drop-shadow-1);" shape-rendering="geometricPrecision">
+        <g shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
           <path d="M196.58,134.8h-43.34l-6.95,20.51h-29.61l42.02-116.13h32.75l42.02,116.13h-29.94l-6.95-20.51ZM189.3,112.97l-14.39-42.51-14.23,42.51h28.62Z" style="fill: #fff;"/>
           <path d="M272.68,131.99h40.03v23.33h-71.63v-22.5l38.38-46.48h-38.05v-23.33h70.47v22.5l-39.21,46.48Z" style="fill: #fff;"/>
           <path d="M419.41,63.01v92.31h-28.29v-12.57c-2.87,4.08-6.76,7.36-11.66,9.84-4.91,2.48-10.34,3.72-16.29,3.72-7.06,0-13.29-1.57-18.69-4.71-5.4-3.14-9.59-7.69-12.57-13.65-2.98-5.96-4.47-12.96-4.47-21.01v-53.93h28.12v50.12c0,6.18,1.6,10.98,4.8,14.39,3.2,3.42,7.5,5.13,12.9,5.13s9.87-1.71,13.07-5.13c3.2-3.42,4.8-8.21,4.8-14.39v-50.12h28.29Z" style="fill: #fff;"/>
