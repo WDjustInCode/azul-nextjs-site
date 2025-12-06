@@ -241,7 +241,7 @@ export default function ThreeStepSection() {
       <div className="azul-steps-inner">
         <div className="azul-steps-header">
           <div className="azul-steps-eyebrow">HOW AZUL WORKS</div>
-          <h2 className="azul-steps-heading">Clear. Simple. Dependable.</h2>
+          <h2 className="azul-steps-heading">Clear. Simple. Reliable.</h2>
           {/* <p className="azul-steps-subcopy">
             A simple, three-step service that keeps your water clear, your equipment protected,
             and your weekends wide open.
