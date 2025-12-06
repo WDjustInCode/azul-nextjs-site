@@ -21,7 +21,6 @@ export default function WhatSetsUsApartSection() {
           margin-bottom: 50px;
           color: #002147;
           letter-spacing: 0.5px;
-          max-width: 650px;
         }
 
         .azul-grid {
@@ -119,7 +118,7 @@ export default function WhatSetsUsApartSection() {
         }
       `}</style>
 
-      <h2 className="azul-title">Quality you can feel</h2>
+      <h2 className="azul-title">Quality you can depend on</h2>
 
       <div className="azul-grid">
         <div className="azul-card azul-card--wide">
