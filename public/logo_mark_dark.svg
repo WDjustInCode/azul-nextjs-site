@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 214.96">
+  <defs>
+    <radialGradient id="radial-gradient" cx="299" cy="114.54" fx="299" fy="114.54" r="212.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bde4ff"/>
+      <stop offset="1" stop-color="#66b2ff"/>
+    </radialGradient>
+    <filter id="drop-shadow-1" x="62.19" y="6.66" width="461" height="202" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur" stdDeviation="10"/>
+      <feFlood flood-color="#000" flood-opacity=".15"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="drop-shadow-2" x="338.19" y="12.66" width="97" height="89" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur result="blur-2" stdDeviation="10"/>
+      <feFlood flood-color="#000" flood-opacity=".15"/>
+      <feComposite in2="blur-2" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Layer_4" data-name="Layer 4">
+    <g>
+      <g>
+        <path d="M329.03,14.11L81,106.39l.05,4.83c-.14.75-.99,1.3-1.93,1.11-.72-.15-1.19-.75-1.19-1.39v-1.76h0v-15.9c0-2.78-2.62-5.06-5.82-5.06h0c-2.44,0-4.54,1.32-5.4,3.18,0,0,0,0,0,0l2.74,1.37s0,0,0,0c.32-1.27,1.82-2.17,3.44-1.77,1.18.29,1.96,1.29,1.96,2.36v3.05s0,0,0,0l-12.34,4.71s0,0,0,0v2.96s0,0,0,0l10.15-3.8,2.19-.81s0,0,0,0v2.98s0,0,0,0l-12.33,4.59h0v2.98s0,0,0,0l10.97-4.08,1.31-.49s0,0,0,0v2.98s0,0,0,0l-11.45,4.26c-.27.1-.56.13-.83.1,0,0,0,0,0,0v6.2c0,.2-.05.38-.13.55h0s-.58.76-1.33.76c-.9,0-1.68-.71-1.68-1.31v-2.99h0v-15.9c0-2.78-2.62-5.06-5.82-5.06-2.44,0-4.54,1.32-5.4,3.18,0,0,0,0,0,0l2.74,1.37s0,0,0,0c.32-1.27,1.82-2.17,3.43-1.77,1.19.29,1.96,1.29,1.96,2.36v3.32h0s0-.05,0-.05h0l-.08,11.98-40.81,15.35c21.36,8.21,187.59,71.89,187.59,71.89,42.5,16.31,90.91,16.41,133.49.27l246.16-93.28L329.03,14.11Z" style="fill: url(#radial-gradient); fill-rule: evenodd;"/>
+        <path d="M11.3,129.2l41.72-15.52v-9.02S0,124.76,0,124.76l.18.07-.18.07,5.37,2.03h0c.86.33,2.96,1.13,5.94,2.27Z" style="fill: #0052cc; fill-rule: evenodd;"/>
+        <polygon points="329.17 0 329.17 0 80.87 94.11 80.87 94.11 80.97 103.23 329.2 10.72 588.57 107.39 600 103.06 600 103.06 329.17 0" style="fill: #0052cc; fill-rule: evenodd;"/>
+      </g>
+      <g>
+        <g style="filter: url(#drop-shadow-1);">
+          <path d="M183.53,153.29h-49.39l-7.92,23.38h-33.75l47.88-132.34h37.33l47.88,132.34h-34.12l-7.92-23.38ZM175.23,128.41l-16.4-48.45-16.21,48.45h32.61Z" style="fill: #002147;"/>
+          <path d="M270.25,150.09h45.62v26.58h-81.63v-25.64l43.74-52.97h-43.36v-26.58h80.31v25.64l-44.68,52.97Z" style="fill: #002147;"/>
+          <path d="M437.46,71.47v105.2h-32.24v-14.33c-3.27,4.65-7.7,8.39-13.29,11.22-5.59,2.83-11.78,4.24-18.57,4.24-8.04,0-15.15-1.79-21.3-5.37-6.16-3.58-10.93-8.77-14.33-15.55-3.39-6.79-5.09-14.77-5.09-23.94v-61.46h32.05v57.12c0,7.04,1.82,12.51,5.47,16.4,3.64,3.9,8.55,5.84,14.7,5.84s11.25-1.95,14.89-5.84c3.64-3.89,5.47-9.36,5.47-16.4v-57.12h32.24Z" style="fill: #002147;"/>
+          <path d="M492.89,37.16v139.51h-32.24V37.16h32.24Z" style="fill: #002147;"/>
+        </g>
+        <polyline points="368.89 65.39 371.25 71.05 404.89 56.32 396.36 42.89" style="fill: #002147; filter: url(#drop-shadow-2);"/>
+      </g>
+    </g>
+  </g>
+</svg>
