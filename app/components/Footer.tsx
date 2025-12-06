@@ -15,6 +15,7 @@ export default function Footer() {
                 width={200}
                 height={89}
                 priority
+                unoptimized
               />
             </div>
             <div className={styles.contactInfo}>
