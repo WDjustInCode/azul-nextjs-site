@@ -82,14 +82,15 @@ export default function WhatSetsUsApartSection() {
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
           font-size: 22px;
+          line-height: 1.4;
           margin-bottom: 8px;
-          letter-spacing: 0.7px;
+          letter-spacing: 0.5px;
         }
 
         .azul-card p {
           font-size: 16px;
           font-weight: 300;
-          line-height: 1.6;
+          line-height: 1.4;
           letter-spacing: 0.3px;
           max-width: 50%;
         }
