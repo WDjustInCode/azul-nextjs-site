@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -9,13 +8,12 @@ export default function Footer() {
         <div className={styles.footerTop}>
           <div className={styles.footerBrand}>
             <div className={styles.logo}>
-              <Image
+              <img
                 src="/combination_mark_white.svg"
                 alt="Azul"
                 width={200}
                 height={89}
-                priority
-                unoptimized
+                className={styles.logoImage}
               />
             </div>
             <div className={styles.contactInfo}>

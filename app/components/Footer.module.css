@@ -29,10 +29,12 @@
   align-items: center;
 }
 
-.logo img {
+.logoImage {
   height: auto;
   width: auto;
   max-width: 200px;
+  image-rendering: auto;
+  -ms-interpolation-mode: nearest-neighbor;
 }
 
 .contactInfo {
