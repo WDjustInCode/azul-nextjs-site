@@ -86,6 +86,14 @@ export default function WhatSetsUsApartSection() {
           letter-spacing: 0.5px;
         }
 
+        .azul-card h3.h3-desktop {
+          display: block;
+        }
+
+        .azul-card h3.h3-mobile {
+          display: none;
+        }
+
         .azul-card p {
           font-size: 16px;
           font-weight: 300;
@@ -116,6 +124,24 @@ export default function WhatSetsUsApartSection() {
             max-width: 70%;
           }
         }
+
+        @media (max-width: 540px) {
+          .azul-card-content {
+            max-width: 80%;
+          }
+
+          .azul-card h3.h3-desktop {
+            display: none;
+          }
+
+          .azul-card h3.h3-mobile {
+            display: block;
+          }
+
+        .azul-card p {
+          max-width: 70%;
+        }
+        }
       `}</style>
 
       <h2 className="azul-title">Quality you can depend on</h2>
@@ -124,7 +150,8 @@ export default function WhatSetsUsApartSection() {
         <div className="azul-card azul-card--wide">
           <img src="https://img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/justInception_generate_a_cinematic_image_of_a_.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:2558,m" alt="Pool service" />
           <div className="azul-card-content">
-            <h3>We Don't Just Clean Your Pool<br />We Give You Peace of Mind</h3>
+            <h3 className="h3-desktop">We Don't Just Clean Your Pool<br />We Give You Peace of Mind</h3>
+            <h3 className="h3-mobile">We Don't Just Clean Your Pool, We Give You Peace of Mind</h3>
             <p>Every visit includes a photo and update, so you always know what got done.</p>
           </div>
         </div>
@@ -140,7 +167,8 @@ export default function WhatSetsUsApartSection() {
         <div className="azul-card azul-card--standard">
           <img src="//img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Untitled-10.jpg/:/rs=w:2000,cg:true" alt="Guarantee" />
           <div className="azul-card-content">
-            <h3>If Anything Goes Wrong, <br /> We've Got You</h3>
+            <h3 className="h3-desktop">If Anything Goes Wrong, <br /> We've Got You</h3>
+            <h3 className="h3-mobile">If Anything Goes Wrong, We've Got You</h3>
             <p>If your pool turns cloudy or green, we fix it for free. No stress, no hassle.</p>
           </div>
         </div>

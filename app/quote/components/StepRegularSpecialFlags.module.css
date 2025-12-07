@@ -1,0 +1,108 @@
+.section {
+  width: 100%;
+}
+
+.heading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #002147;
+}
+
+.subtitle {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #6b717a;
+  font-size: 16px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+  .options {
+    flex-direction: row;
+  }
+}
+
+.button {
+  flex: 1;
+  max-width: 320px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.button:hover {
+  border-color: #0052CC;
+}
+
+.buttonActive {
+  border-color: #0052CC;
+  box-shadow: 0 1px 3px rgba(0, 82, 204, 0.1);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #002147;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkboxActive {
+  background-color: #0052CC;
+  border-color: #0052CC;
+}
+
+.checkboxIcon {
+  width: 12px;
+  height: 12px;
+  color: #ffffff;
+}
+
+.nextButton {
+  display: flex;
+  justify-content: center;
+}
+
+.buttonPrimary {
+  font-family: 'Poppins', sans-serif;
+  padding: 12px 32px;
+  border-radius: 6px;
+  background: #0052CC;
+  color: #ffffff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.buttonPrimary:hover {
+  background: #0042a3;
+}
+
