@@ -58,9 +58,14 @@
     flex-wrap: wrap;
 }
 
-.addressInput {
+.autocompleteWrapper {
     flex: 1;
     min-width: 280px;
+    position: relative;
+}
+
+.addressInput {
+    width: 100%;
     padding: 18px 24px;
     border-radius: 999px;
     border: none;
@@ -72,6 +77,41 @@
 
 .addressInput::placeholder {
     color: #6b717a;
+}
+
+.suggestionsContainer {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 4px;
+}
+
+.suggestionItem {
+    padding: 12px 24px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #002147;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s ease;
+}
+
+.suggestionItem:last-child {
+    border-bottom: none;
+}
+
+.suggestionItem:hover,
+.suggestionItemActive {
+    background-color: #f3f4f6;
 }
 
 .ctaButton {

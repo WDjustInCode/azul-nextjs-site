@@ -8,6 +8,8 @@ export type ServiceCategory =
 export type PoolSize = "small" | "medium" | "large";
 
 export type StepId =
+  | "address-entry"
+  | "manual-address-entry"
   | "res-or-comm"
   | "res-service-type"
   | "res-regular-pool-type"
