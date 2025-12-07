@@ -50,7 +50,7 @@ export default function Header() {
           <a href="tel:18887687554" className={styles.phone} onClick={closeMenu}>
             (888) 768-7554
           </a>
-          <Link href="#quote" className={styles.ctaButton} onClick={closeMenu}>
+          <Link href="/quote" className={styles.ctaButton} onClick={closeMenu}>
             Get a Quote
           </Link>
         </nav>

@@ -1,0 +1,158 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+}
+
+.content {
+  max-width: 600px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 48px 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 64px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.heading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #002147;
+}
+
+.message {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+  color: #6b717a;
+  margin-bottom: 24px;
+}
+
+.addressNote {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  padding: 12px 16px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  color: #002147;
+  text-align: center;
+}
+
+.helpText {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: center;
+  color: #002147;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #002147;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  color: #002147;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #0052CC;
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.button {
+  padding: 14px 32px;
+  border-radius: 6px;
+  background: #0052CC;
+  color: #ffffff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.button:hover:not(:disabled) {
+  background: #0042a3;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.backButton {
+  margin-top: 24px;
+  background: none;
+  border: none;
+  color: #6b717a;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  padding: 8px;
+  transition: color 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.backButton:hover {
+  color: #002147;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 32px 24px;
+  }
+
+  .heading {
+    font-size: 1.75rem;
+  }
+}
+

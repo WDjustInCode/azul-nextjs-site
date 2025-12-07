@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, Suspense, useRef, useEffect } from "react";
 import QuoteLayout from "./components/QuoteLayout";
 import {
   QuoteState,
@@ -9,6 +9,8 @@ import {
   ServiceCategory,
   PoolSize,
 } from "./components/types";
+import { StepAddress } from "./components/StepAddress";
+import { StepManualAddress } from "./components/StepManualAddress";
 import { StepResidentialOrCommercial } from "./components/StepResidentialOrCommercial";
 import { StepResidentialServiceType } from "./components/StepResidentialServiceType";
 import { StepRegularPoolType } from "./components/StepRegularPoolType";
@@ -21,8 +23,10 @@ import { CommercialForm } from "./components/CommercialForm";
 import { ThankYouStep } from "./components/ThankYouStep";
 
 function QuoteWizardContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const addressFromUrl = searchParams.get("address") || undefined;
+  const stepFromUrl = searchParams.get("step") as StepId | null;
 
   const [state, setState] = useState<QuoteState>({
     address: addressFromUrl,
@@ -34,10 +38,29 @@ function QuoteWizardContent() {
       saltwaterPool: false,
       treesOverPool: false,
     },
+    poolSize: undefined,
   });
 
-  const [step, setStep] = useState<StepId>("res-or-comm");
-  const [stepHistory, setStepHistory] = useState<StepId[]>(["res-or-comm"]);
+  // Determine initial step: check URL step param, then address, then default
+  const getInitialStep = (): StepId => {
+    if (stepFromUrl === "manual-address-entry") {
+      return "manual-address-entry";
+    }
+    if (addressFromUrl) {
+      return "res-or-comm";
+    }
+    return "address-entry";
+  };
+  
+  const initialStep: StepId = getInitialStep();
+  const [step, setStep] = useState<StepId>(initialStep);
+  const [stepHistory, setStepHistory] = useState<StepId[]>([initialStep]);
+
+  // Use ref to always access the latest state value (avoids closure issues)
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   // Get previous step from history
   const getPreviousStep = (): StepId | null => {
@@ -60,7 +83,7 @@ function QuoteWizardContent() {
 
   // You can swap this with a real API call
   const completeFlow = (nextStep: StepId = "thank-you") => {
-    console.log("Final quote state:", state);
+    console.log("Final quote state:", stateRef.current);
     goToStep(nextStep);
   };
 
@@ -71,6 +94,49 @@ function QuoteWizardContent() {
   // ---- step render switch ----
   const renderStep = () => {
     switch (step) {
+      case "address-entry":
+        return (
+          <StepAddress
+            onSubmit={(address) => {
+              setState((s) => ({ ...s, address }));
+              goToStep("res-or-comm");
+            }}
+            onBack={null}
+            onSkip={() => {
+              // Navigate to manual address entry form
+              goToStep("manual-address-entry");
+            }}
+          />
+        );
+
+      case "manual-address-entry":
+        // Check if user came from home (stepHistory has only manual-address-entry)
+        // vs from assisted address entry (has address-entry in history)
+        const cameFromHome = stepHistory.length === 1 && stepHistory[0] === "manual-address-entry";
+        return (
+          <StepManualAddress
+            onSubmit={(addressData) => {
+              // Format address as a single string
+              const formattedAddress = `${addressData.street}, ${addressData.city}, ${addressData.state} ${addressData.zip}`;
+              setState((s) => ({ ...s, address: formattedAddress }));
+              goToStep("res-or-comm");
+            }}
+            onBack={cameFromHome ? () => {
+              // If came from home, navigate back to home
+              router.push("/");
+            } : (() => {
+              // If came from assisted address entry, go back to that step
+              const previousStep = getPreviousStep();
+              if (previousStep) {
+                goBack();
+              } else {
+                // Fallback: go to address entry
+                goToStep("address-entry");
+              }
+            })}
+          />
+        );
+
       case "res-or-comm":
         return (
           <StepResidentialOrCommercial
@@ -83,7 +149,7 @@ function QuoteWizardContent() {
                 goToStep("res-service-type");
               }
             }}
-            onBack={null}
+            onBack={getPreviousStep() ? goBack : null}
           />
         );
 
