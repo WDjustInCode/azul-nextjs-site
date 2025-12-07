@@ -36,10 +36,13 @@ export interface QuoteState {
 
   segment: "residential" | "commercial" | null;
   serviceCategory: ServiceCategory | null;
+  serviceCategoryOther?: string; // text input for "other" service category
 
   poolType?: "pool-only" | "pool-spa" | "hot-tub" | "other";
+  poolTypeOther?: string; // text input for "other" pool type
 
   equipmentSelections: string[]; // pump, filter, etc
+  equipmentOther?: string; // text input for "something else" equipment
   specialFlags: {
     aboveGroundPool: boolean;
     saltwaterPool: boolean;
