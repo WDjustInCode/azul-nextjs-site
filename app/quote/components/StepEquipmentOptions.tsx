@@ -5,12 +5,13 @@ import styles from "./StepEquipmentOptions.module.css";
 import { BackButton } from "./BackButton";
 
 interface Props {
-  onNext: (selected: string[]) => void;
+  onNext: (selected: string[], otherText?: string) => void;
   onBack: (() => void) | null;
 }
 
 export function StepEquipmentOptions({ onNext, onBack }: Props) {
   const [selected, setSelected] = useState<string[]>([]);
+  const [otherText, setOtherText] = useState("");
 
   const toggle = (id: string) => {
     setSelected((prev) =>
@@ -26,6 +27,17 @@ export function StepEquipmentOptions({ onNext, onBack }: Props) {
     "Automation system",
     "I'm not sure / something else",
   ];
+
+  const hasSomethingElse = selected.includes("I'm not sure / something else");
+  const canProceed = selected.length > 0 && (!hasSomethingElse || otherText.trim());
+
+  const handleNext = () => {
+    if (hasSomethingElse && otherText.trim()) {
+      onNext(selected, otherText.trim());
+    } else {
+      onNext(selected);
+    }
+  };
 
   return (
     <section className={styles.section}>
@@ -57,11 +69,24 @@ export function StepEquipmentOptions({ onNext, onBack }: Props) {
         })}
       </div>
 
+      {hasSomethingElse && (
+        <div className={styles.otherInputContainer}>
+          <input
+            type="text"
+            value={otherText}
+            onChange={(e) => setOtherText(e.target.value)}
+            placeholder="Please describe what you need help with"
+            className={styles.otherInput}
+            autoFocus
+          />
+        </div>
+      )}
+
       <div className={styles.nextButton}>
         <button
           type="button"
-          disabled={selected.length === 0}
-          onClick={() => onNext(selected)}
+          disabled={!canProceed}
+          onClick={handleNext}
           className={styles.buttonPrimary}
         >
           Next

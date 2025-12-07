@@ -90,8 +90,12 @@ function QuoteWizardContent() {
       case "res-service-type":
         return (
           <StepResidentialServiceType
-            onSelect={(category: ServiceCategory) => {
-              setState((s) => ({ ...s, serviceCategory: category }));
+            onSelect={(category: ServiceCategory, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                serviceCategory: category,
+                serviceCategoryOther: otherText 
+              }));
               if (category === "regular") {
                 goToStep("res-regular-pool-type");
               } else if (category === "equipment") {
@@ -114,8 +118,12 @@ function QuoteWizardContent() {
       case "res-regular-pool-type":
         return (
           <StepRegularPoolType
-            onSelect={(poolType) => {
-              setState((s) => ({ ...s, poolType }));
+            onSelect={(poolType, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                poolType,
+                poolTypeOther: otherText 
+              }));
               if (poolType === "hot-tub") {
                 // hot tub only → email → thank you
                 goToStep("res-regular-email");
@@ -174,8 +182,12 @@ function QuoteWizardContent() {
       case "res-equipment-options":
         return (
           <StepEquipmentOptions
-            onNext={(selected) => {
-              setState((s) => ({ ...s, equipmentSelections: selected }));
+            onNext={(selected, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                equipmentSelections: selected,
+                equipmentOther: otherText 
+              }));
               goToStep("res-equipment-pool-type");
             }}
             onBack={goBack}
@@ -187,8 +199,12 @@ function QuoteWizardContent() {
           <StepRegularPoolType
             title="What does this equipment serve?"
             subtitle="Choose the pool or spa this equipment is for."
-            onSelect={(poolType) => {
-              setState((s) => ({ ...s, poolType }));
+            onSelect={(poolType, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                poolType,
+                poolTypeOther: otherText 
+              }));
               if (poolType === "hot-tub") {
                 // above-ground hot tub → email → thank you
                 goToStep("res-equipment-email");
@@ -247,8 +263,12 @@ function QuoteWizardContent() {
           <StepRegularPoolType
             title="What do we clean for you?"
             subtitle="Filter or salt cell cleaning for pools and spas."
-            onSelect={(poolType) => {
-              setState((s) => ({ ...s, poolType }));
+            onSelect={(poolType, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                poolType,
+                poolTypeOther: otherText 
+              }));
               if (poolType === "hot-tub") {
                 // hot tub only → email → thank you
                 goToStep("res-filter-email");
@@ -322,8 +342,12 @@ function QuoteWizardContent() {
           <StepRegularPoolType
             title="Tell us about your pool"
             subtitle="This helps us customize your quote."
-            onSelect={(poolType) => {
-              setState((s) => ({ ...s, poolType }));
+            onSelect={(poolType, otherText?: string) => {
+              setState((s) => ({ 
+                ...s, 
+                poolType,
+                poolTypeOther: otherText 
+              }));
               goToStep("res-other-size");
             }}
             onBack={goBack}

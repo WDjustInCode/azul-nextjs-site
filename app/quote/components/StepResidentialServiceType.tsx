@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { ServiceCategory } from "./types";
 import styles from "./StepResidentialServiceType.module.css";
 import { BackButton } from "./BackButton";
 
 interface Props {
-  onSelect: (category: ServiceCategory) => void;
+  onSelect: (category: ServiceCategory, otherText?: string) => void;
   onBack: (() => void) | null;
 }
 
 export function StepResidentialServiceType({ onSelect, onBack }: Props) {
+  const [selectedOther, setSelectedOther] = useState(false);
+  const [otherText, setOtherText] = useState("");
+
   const options: { id: ServiceCategory; label: string; sub: string }[] = [
     {
       id: "regular",
@@ -38,6 +42,21 @@ export function StepResidentialServiceType({ onSelect, onBack }: Props) {
     },
   ];
 
+  const handleSelect = (id: ServiceCategory) => {
+    if (id === "other") {
+      setSelectedOther(true);
+    } else {
+      setSelectedOther(false);
+      onSelect(id);
+    }
+  };
+
+  const handleOtherSubmit = () => {
+    if (otherText.trim()) {
+      onSelect("other", otherText.trim());
+    }
+  };
+
   return (
     <section className={styles.section}>
       {onBack && <BackButton onClick={onBack} />}
@@ -53,14 +72,35 @@ export function StepResidentialServiceType({ onSelect, onBack }: Props) {
           <button
             key={opt.id}
             type="button"
-            onClick={() => onSelect(opt.id)}
-            className={styles.button}
+            onClick={() => handleSelect(opt.id)}
+            className={`${styles.button} ${selectedOther && opt.id === "other" ? styles.buttonActive : ""}`}
           >
             <span className={styles.label}>{opt.label}</span>
             <span className={styles.description}>{opt.sub}</span>
           </button>
         ))}
       </div>
+
+      {selectedOther && (
+        <div className={styles.otherInputContainer}>
+          <input
+            type="text"
+            value={otherText}
+            onChange={(e) => setOtherText(e.target.value)}
+            placeholder="Please describe what you need help with"
+            className={styles.otherInput}
+            autoFocus
+          />
+          <button
+            type="button"
+            onClick={handleOtherSubmit}
+            disabled={!otherText.trim()}
+            className={styles.otherSubmitButton}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </section>
   );
 }
