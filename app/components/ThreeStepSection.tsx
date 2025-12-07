@@ -1,4 +1,34 @@
+'use client';
+
+import { useRef, useEffect } from 'react';
+
 export default function ThreeStepSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Ensure first frame loads in Safari
+    const video = videoRef.current;
+    if (video) {
+      video.load();
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = 0;
+      }, { once: true });
+    }
+  }, []);
+
+  const handleMouseEnter = (videoRef: React.RefObject<HTMLVideoElement | null>) => {
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
+
+  const handleMouseLeave = (videoRef: React.RefObject<HTMLVideoElement | null>) => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
   return (
     <section className="azul-steps-hero">
       <style>{`
@@ -68,7 +98,8 @@ export default function ThreeStepSection() {
           overflow: hidden;
         }
 
-        .azul-steps-image-wrapper img {
+        .azul-steps-image-wrapper img,
+        .azul-steps-image-wrapper video {
           display: block;
           width: 100%;
           height: auto;
@@ -250,8 +281,20 @@ export default function ThreeStepSection() {
 
         <div className="azul-steps-row">
           <div className="azul-steps-image-col">
-            <div className="azul-steps-image-wrapper">
-              <img src="https://img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Image%20Nov%2023%2C%202025%20at%2007_50_59%20PM-934bce4.png/:/rs=w:740,cg:true,m" alt="Azul pool technician servicing a backyard pool" />
+            <div 
+              className="azul-steps-image-wrapper"
+              onMouseEnter={() => handleMouseEnter(videoRef)}
+              onMouseLeave={() => handleMouseLeave(videoRef)}
+            >
+              <video
+                ref={videoRef}
+                src="/grok-video-check.mp4"
+                muted
+                loop
+                playsInline
+                preload="auto"
+                style={{ display: 'block', width: '100%', height: 'auto' }}
+              />
             </div>
           </div>
 

@@ -42,11 +42,16 @@
   margin: 0 auto 20px auto;
 }
 
-.card img {
+.card img,
+.card video {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+.video {
+  pointer-events: none;
 }
 
 .card h3 {

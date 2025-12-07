@@ -94,6 +94,23 @@
     transform: translateY(-2px);
 }
 
+.skipLink {
+    font-family: 'Poppins', sans-serif;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.9;
+    margin-bottom: 24px;
+    transition: opacity 0.2s ease;
+}
+
+.skipLink:hover {
+    opacity: 1;
+}
+
 .reviews {
     display: flex;
     align-items: center;

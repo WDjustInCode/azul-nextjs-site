@@ -1,0 +1,25 @@
+.backButton {
+  font-family: 'Poppins', sans-serif;
+  background: none;
+  border: none;
+  color: #6b717a;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.backButton:hover {
+  color: #002147;
+}
+
+.backIcon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+

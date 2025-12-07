@@ -1,0 +1,74 @@
+.section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.card {
+  max-width: 768px;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.imagePlaceholder {
+  height: 160px;
+  width: 100%;
+  background: #e5e7eb;
+}
+
+.content {
+  padding: 24px;
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding: 32px;
+  }
+}
+
+.heading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #002147;
+}
+
+.message {
+  font-family: 'Poppins', sans-serif;
+  color: #374151;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.address {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #6b717a;
+  margin-bottom: 16px;
+}
+
+.addressLabel {
+  font-weight: 500;
+  color: #002147;
+}
+
+.button {
+  font-family: 'Poppins', sans-serif;
+  padding: 12px 24px;
+  border-radius: 6px;
+  background: #0052CC;
+  color: #ffffff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background: #0042a3;
+}
+
