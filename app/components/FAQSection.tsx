@@ -155,7 +155,7 @@ export default function FAQSection() {
           }
 
           .azul-faq-heading {
-            font-size: 32px;
+            font-size: 42px;
           }
 
           .azul-faq-question {

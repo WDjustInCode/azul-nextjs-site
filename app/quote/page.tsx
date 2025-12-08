@@ -21,6 +21,7 @@ import { StepAboveGroundNotice } from "./components/StepAboveGroundNotice";
 import { StepEquipmentOptions } from "./components/StepEquipmentOptions";
 import { CommercialForm } from "./components/CommercialForm";
 import { ThankYouStep } from "./components/ThankYouStep";
+import { calculateServicePrice } from "../utils/pricing";
 
 function QuoteWizardContent() {
   const router = useRouter();
@@ -83,7 +84,21 @@ function QuoteWizardContent() {
 
   // You can swap this with a real API call
   const completeFlow = (nextStep: StepId = "thank-you") => {
-    console.log("Final quote state:", stateRef.current);
+    const finalState = stateRef.current;
+    console.log("Final quote state:", finalState);
+    
+    // Calculate pricing based on service request
+    try {
+      const pricing = calculateServicePrice(finalState);
+      console.log("Service pricing calculation:", {
+        monthlyTotal: `$${pricing.monthlyTotal.toFixed(2)}/month`,
+        annualTotal: `$${(pricing.monthlyTotal * 12).toFixed(2)}/year`,
+        breakdown: pricing.breakdown,
+      });
+    } catch (error) {
+      console.error("Error calculating pricing:", error);
+    }
+    
     goToStep(nextStep);
   };
 

@@ -23,7 +23,7 @@ export default function PopularLocationsSection() {
           color: #002147;
           text-align: left;
           margin: 0 0 50px 0;
-          max-width: 720px;
+          max-width: 800px;
         }
 
         .azul-locations-title {
@@ -196,7 +196,7 @@ export default function PopularLocationsSection() {
           }
           
           .azul-contact-header {
-            font-size: 32px;
+            font-size: 42px;
           }
 
           .azul-locations-title {
