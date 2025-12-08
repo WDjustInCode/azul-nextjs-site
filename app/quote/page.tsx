@@ -82,8 +82,8 @@ function QuoteWizardContent() {
     }
   };
 
-  // You can swap this with a real API call
-  const completeFlow = (nextStep: StepId = "thank-you") => {
+  // Send quote to API and upload to Vercel Blob
+  const completeFlow = async (nextStep: StepId = "thank-you") => {
     const finalState = stateRef.current;
     console.log("Final quote state:", finalState);
     
@@ -97,6 +97,32 @@ function QuoteWizardContent() {
       });
     } catch (error) {
       console.error("Error calculating pricing:", error);
+    }
+    
+    // Send quote to API route for Vercel Blob upload
+    try {
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(finalState),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log('Quote submitted successfully');
+      } else {
+        console.error('Failed to submit quote:', result.error);
+        // Show user-friendly error if rate limited
+        if (response.status === 429) {
+          alert('Too many requests. Please wait a moment and try again.');
+        }
+      }
+    } catch (error) {
+      console.error('Error sending quote to API:', error);
+      // Continue to thank you page even if upload fails
     }
     
     goToStep(nextStep);
