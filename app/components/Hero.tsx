@@ -118,7 +118,8 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.heroContent}>
         <div className={styles.heroText}>
-          <h1 className={styles.headline}>We don't just maintain pools, we maintain trust</h1>
+          <h1 className={`${styles.headline} ${styles.headlineDesktop}`}>We Don't Just Maintain Pools, <br />We Maintain Trust</h1>
+          <h1 className={`${styles.headline} ${styles.headlineMobile}`}>We Don't Just Maintain Pools, We Maintain Trust</h1>
           <p className={styles.subheadline}>
             Reliable, friendly service that keeps your water clean, clear, and worry-free.
           </p>

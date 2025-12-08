@@ -232,7 +232,7 @@ export default function ThreeStepSection() {
             }
 
             .azul-steps-heading {
-                font-size: 32px;
+                font-size: 42px;
             }
 
             .azul-steps-cta-wrap {
@@ -250,6 +250,10 @@ export default function ThreeStepSection() {
         @media (max-width: 479px) {
             .azul-steps-content {
                 justify-content: left;
+                text-align: left;
+            }
+
+            .azul-steps-header {
                 text-align: left;
             }
 

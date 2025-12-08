@@ -103,44 +103,44 @@ export default function WhatSetsUsApartSection() {
         }
 
         @media (max-width: 768px) {
-          .azul-section {
-            padding: 60px 20px 20px;
-          }
-          
-          .azul-title {
-            font-size: 32px;
-          }
+            .azul-section {
+                padding: 60px 20px 20px;
+            }
+            
+            .azul-title {
+                font-size: 42px;
+            }
 
-          .azul-grid {
-            grid-template-columns: 1fr;
-          }
+            .azul-grid {
+                grid-template-columns: 1fr;
+            }
 
-          .azul-card--wide,
-          .azul-card--standard {
-            height: 300px;
-          }
+            .azul-card--wide,
+            .azul-card--standard {
+                height: 300px;
+            }
 
-          .azul-card-content {
-            max-width: 70%;
-          }
+            .azul-card-content {
+                max-width: 70%;
+            }
         }
 
         @media (max-width: 540px) {
-          .azul-card-content {
-            max-width: 80%;
-          }
+            .azul-card-content {
+                max-width: 80%;
+            }
 
-          .azul-card h3.h3-desktop {
-            display: none;
-          }
+            .azul-card h3.h3-desktop {
+                display: none;
+            }
 
-          .azul-card h3.h3-mobile {
-            display: block;
-          }
+            .azul-card h3.h3-mobile {
+                display: block;
+            }
 
-        .azul-card p {
-          max-width: 70%;
-        }
+            .azul-card p {
+                max-width: 70%;
+            }
         }
       `}</style>
 
