@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface BlobInfo {
   pathname: string;
@@ -20,6 +21,7 @@ interface QuoteData {
 }
 
 export default function QuotesAdminPage() {
+  const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
@@ -33,6 +35,10 @@ export default function QuotesAdminPage() {
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [loadingAuditLogs, setLoadingAuditLogs] = useState(false);
   const [auditEmailFilter, setAuditEmailFilter] = useState("");
+  const [editablePricing, setEditablePricing] = useState<any | null>(null);
+  const [savingPricing, setSavingPricing] = useState(false);
+  const [accepting, setAccepting] = useState(false);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,12 +141,14 @@ export default function QuotesAdminPage() {
       // Already loaded, just toggle
       setSelectedQuote(null);
       setSelectedPathname(null);
+      setActionMessage(null);
       return;
     }
 
     try {
       setLoadingQuote(true);
       setError(null);
+      setActionMessage(null);
       const response = await fetch(`/api/quotes/get?pathname=${encodeURIComponent(pathname)}`, {
         credentials: 'include',
       });
@@ -149,6 +157,7 @@ export default function QuotesAdminPage() {
       if (result.success) {
         setSelectedQuote(result.data);
         setSelectedPathname(pathname);
+        setEditablePricing(result.data?.pricing || null);
       } else {
         setError(result.error || "Failed to load quote");
       }
@@ -168,6 +177,84 @@ export default function QuotesAdminPage() {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
+
+  const handlePricingChange = (key: string, value: any) => {
+    setEditablePricing((prev: any) => ({
+      ...(prev || {}),
+      [key]: value,
+    }));
+  };
+
+  const handleFrequencyChange = (key: string, value: any) => {
+    setEditablePricing((prev: any) => ({
+      ...(prev || {}),
+      frequencyVariants: {
+        ...(prev?.frequencyVariants || {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const savePricing = async () => {
+    if (!selectedPathname) return;
+    setSavingPricing(true);
+    setActionMessage(null);
+    try {
+      const response = await fetch("/api/quotes/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pathname: selectedPathname,
+          pricing: editablePricing,
+          status: "updated",
+        }),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (result.success) {
+        setSelectedQuote(result.data);
+        setEditablePricing(result.data.pricing || null);
+        setActionMessage(`Pricing saved for ${selectedPathname}.`);
+      } else {
+        setError(result.error || "Failed to save pricing");
+      }
+    } catch (err) {
+      setError("Error saving pricing");
+      console.error(err);
+    } finally {
+      setSavingPricing(false);
+    }
+  };
+
+  const acceptQuote = async () => {
+    if (!selectedPathname) return;
+    setAccepting(true);
+    setActionMessage(null);
+    try {
+      const response = await fetch("/api/quotes/accept", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pathname: selectedPathname,
+          pricing: editablePricing,
+        }),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (result.success) {
+        setSelectedQuote(result.data);
+        setEditablePricing(result.data.pricing || null);
+        setActionMessage(`Quote accepted and emails sent for ${selectedPathname}.`);
+      } else {
+        setError(result.error || "Failed to accept quote");
+      }
+    } catch (err) {
+      setError("Error accepting quote");
+      console.error(err);
+    } finally {
+      setAccepting(false);
+    }
   };
 
   // Show login form if not authenticated
@@ -274,10 +361,12 @@ export default function QuotesAdminPage() {
             fetch("/api/admin/auth", { 
               method: "DELETE",
               credentials: 'include',
+            }).finally(() => {
+              setAuthenticated(false);
+              setBlobs([]);
+              setSelectedQuote(null);
+              router.push("/");
             });
-            setAuthenticated(false);
-            setBlobs([]);
-            setSelectedQuote(null);
           }}
           style={{
             padding: "0.5rem 1rem",
@@ -525,6 +614,92 @@ export default function QuotesAdminPage() {
               <div style={{ marginBottom: "1rem" }}>
                 <strong>Pathname:</strong> {selectedPathname}
               </div>
+              <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                {selectedQuote.status && (
+                  <span style={{ padding: "0.35rem 0.6rem", background: "#eef2ff", borderRadius: "6px", fontWeight: 600 }}>
+                    Status: {selectedQuote.status}
+                  </span>
+                )}
+                {selectedQuote.createdAt && <span>Created: {new Date(selectedQuote.createdAt).toLocaleString()}</span>}
+                {selectedQuote.updatedAt && <span>Updated: {new Date(selectedQuote.updatedAt).toLocaleString()}</span>}
+                {selectedQuote.acceptedAt && <span>Accepted: {new Date(selectedQuote.acceptedAt).toLocaleString()}</span>}
+              </div>
+              {actionMessage && (
+                <div style={{ padding: "0.75rem 1rem", background: "#e7f7ed", border: "1px solid #cde8d9", borderRadius: "6px", marginBottom: "1rem" }}>
+                  {actionMessage}
+                </div>
+              )}
+              {selectedQuote.pricing && (
+                <div style={{ background: "white", border: "1px solid #ddd", borderRadius: "6px", padding: "1rem", marginBottom: "1rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                    <h3 style={{ margin: 0 }}>Pricing (editable)</h3>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <button
+                        onClick={savePricing}
+                        disabled={savingPricing}
+                        style={{ padding: "0.5rem 0.75rem", background: "#0d6efd", color: "white", border: "none", borderRadius: "4px", cursor: savingPricing ? "not-allowed" : "pointer" }}
+                      >
+                        {savingPricing ? "Saving..." : "Save Pricing"}
+                      </button>
+                      <button
+                        onClick={acceptQuote}
+                        disabled={accepting}
+                        style={{ padding: "0.5rem 0.75rem", background: "#198754", color: "white", border: "none", borderRadius: "4px", cursor: accepting ? "not-allowed" : "pointer" }}
+                      >
+                        {accepting ? "Accepting..." : "Accept & Email"}
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0.75rem" }}>
+                    {["basePrice","sizeAdjustment","poolTypeAdjustment","specialConditionFees","equipmentFees","subtotal","monthlyTotal"].map((field) => (
+                      <label key={field} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.9rem" }}>
+                        <span style={{ fontWeight: 600 }}>{field}</span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={editablePricing?.[field] ?? ""}
+                          onChange={(e) => handlePricingChange(field, e.target.value === "" ? null : Number(e.target.value))}
+                          style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                        />
+                      </label>
+                    ))}
+                    <label style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.9rem" }}>
+                      <span style={{ fontWeight: 600 }}>Is One-Time</span>
+                      <input
+                        type="checkbox"
+                        checked={!!editablePricing?.isOneTime}
+                        onChange={(e) => handlePricingChange("isOneTime", e.target.checked)}
+                        style={{ width: "16px", height: "16px" }}
+                      />
+                    </label>
+                  </div>
+                  <div style={{ marginTop: "0.75rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.75rem" }}>
+                    {["weekly","biWeekly","monthly"].map((freq) => (
+                      <label key={freq} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.9rem" }}>
+                        <span style={{ fontWeight: 600 }}>Frequency: {freq}</span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={editablePricing?.frequencyVariants?.[freq] ?? ""}
+                          onChange={(e) => handleFrequencyChange(freq, e.target.value === "" ? null : Number(e.target.value))}
+                          style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: "0.75rem" }}>
+                    <label style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.9rem" }}>
+                      <span style={{ fontWeight: 600 }}>Breakdown (one per line)</span>
+                      <textarea
+                        value={(editablePricing?.breakdown || []).join("\n")}
+                        onChange={(e) => handlePricingChange("breakdown", e.target.value.split("\n"))}
+                        rows={6}
+                        style={{ padding: "0.75rem", border: "1px solid #ccc", borderRadius: "4px", width: "100%" }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              )}
               <pre
                 style={{
                   backgroundColor: "white",

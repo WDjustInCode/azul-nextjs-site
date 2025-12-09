@@ -269,3 +269,83 @@ San Antonio, TX
   }
 }
 
+interface SendQuoteEmailParams {
+  to: string | string[];
+  subject: string;
+  customerName?: string;
+  breakdownLines?: string[];
+  summary?: {
+    subtotal?: number;
+    monthlyTotal?: number;
+    isOneTime?: boolean;
+  };
+}
+
+/**
+ * Send a quote email to customer + internal team.
+ */
+export async function sendQuoteEmail({
+  to,
+  subject,
+  customerName,
+  breakdownLines = [],
+  summary,
+}: SendQuoteEmailParams): Promise<boolean> {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[EMAIL] RESEND_API_KEY not set. Quote email would have been sent to:', to);
+    return false;
+  }
+
+  try {
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'quotes@azulpoolservices.com';
+    const companyName = process.env.COMPANY_NAME || 'Azul Pool Services';
+    const toArray = Array.isArray(to) ? to : [to];
+
+    const breakdownHtml = breakdownLines.length
+      ? `<ul>${breakdownLines.map(line => `<li>${line}</li>`).join('')}</ul>`
+      : '<p>No pricing breakdown provided.</p>';
+
+    const summaryHtml = summary
+      ? `
+        <p><strong>Summary</strong></p>
+        <ul>
+          ${summary.subtotal !== undefined ? `<li>Subtotal: $${summary.subtotal.toFixed(2)}</li>` : ''}
+          ${summary.monthlyTotal !== undefined ? `<li>${summary.isOneTime ? 'Total' : 'Monthly'} Total: $${summary.monthlyTotal.toFixed(2)}</li>` : ''}
+        </ul>
+      `
+      : '';
+
+    const { error } = await resend.emails.send({
+      from: fromEmail,
+      to: toArray,
+      subject,
+      html: `
+        <!doctype html>
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h2 style="color:#0c6efd;">${companyName} Quote</h2>
+          <p>Hello${customerName ? ` ${customerName}` : ''},</p>
+          <p>Your quote is ready. Details are below.</p>
+          ${summaryHtml}
+          <p><strong>Pricing Breakdown</strong></p>
+          ${breakdownHtml}
+          <p style="margin-top:20px;">Thanks,<br/>${companyName} Team</p>
+        </body>
+        </html>
+      `,
+      text: `Your ${companyName} quote is ready.\n\nBreakdown:\n${breakdownLines.join('\n')}\n\n${summary ? `Subtotal: $${summary.subtotal?.toFixed(2) || ''}\nTotal: $${summary.monthlyTotal?.toFixed(2) || ''}\n` : ''}`,
+    });
+
+    if (error) {
+      console.error('[EMAIL] Error sending quote email:', error);
+      return false;
+    }
+
+    console.log('[EMAIL] Quote email sent to', toArray.join(', '));
+    return true;
+  } catch (err) {
+    console.error('[EMAIL] Exception sending quote email:', err);
+    return false;
+  }
+}
+

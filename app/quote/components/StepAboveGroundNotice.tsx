@@ -7,9 +7,10 @@ import { BackButton } from "./BackButton";
 interface Props {
   onEmailSubmit: (email: string) => void;
   onBack: (() => void) | null;
+  initialEmail?: string;
 }
 
-export function StepAboveGroundNotice({ onEmailSubmit, onBack }: Props) {
+export function StepAboveGroundNotice({ onEmailSubmit, onBack, initialEmail }: Props) {
   return (
     <section className={styles.section}>
       {onBack && <BackButton onClick={onBack} />}
@@ -25,6 +26,7 @@ export function StepAboveGroundNotice({ onEmailSubmit, onBack }: Props) {
         title="Where can we send your quote?"
         subtitle=""
         cta="Get My Chemical Service Quote"
+        initialEmail={initialEmail}
         onSubmit={onEmailSubmit}
         onBack={null}
       />
