@@ -70,7 +70,7 @@ export default function Footer() {
         <div className={styles.footerBottom}>
           <p className={styles.copyright}>© 2025 Azul. All rights reserved.</p>
           <div className={styles.legalLinks}>
-            <Link href="#privacy">Privacy Policy</Link>
+            <Link href="/privacy">Privacy Policy</Link>
             <Link href="#terms">Terms of Use</Link>
             <Link href="#sitemap">Sitemap</Link>
           </div>

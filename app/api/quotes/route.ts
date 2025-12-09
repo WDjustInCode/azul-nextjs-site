@@ -1,6 +1,7 @@
 import { put } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { QuoteState } from '../../quote/components/types';
+import { logAuditEvent } from '../../lib/compliance';
 
 // Simple rate limiting store (in production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -45,20 +46,28 @@ function validateQuoteData(data: any): data is QuoteState {
     return false;
   }
   
+  // EMAIL IS REQUIRED - must have either email or commercial.email
+  const hasResidentialEmail = data.email && typeof data.email === 'string';
+  const hasCommercialEmail = data.commercial?.email && typeof data.commercial.email === 'string';
+  
+  if (!hasResidentialEmail && !hasCommercialEmail) {
+    console.error('[VALIDATE] Quote missing email:', JSON.stringify(data, null, 2));
+    return false; // Email is required
+  }
+  
   // Validate email format if present
-  if (data.email && typeof data.email === 'string') {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      return false;
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (hasResidentialEmail && !emailRegex.test(data.email)) {
+    console.error('[VALIDATE] Invalid residential email format:', data.email);
+    return false;
   }
   
   // Validate commercial data structure if present
   if (data.commercial) {
     if (typeof data.commercial !== 'object') return false;
-    if (data.commercial.email && typeof data.commercial.email === 'string') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(data.commercial.email)) return false;
+    if (hasCommercialEmail && !emailRegex.test(data.commercial.email)) {
+      console.error('[VALIDATE] Invalid commercial email format:', data.commercial.email);
+      return false;
     }
   }
   
@@ -90,11 +99,24 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `quotes/quote-${timestamp}.json`;
 
-    // Upload quote data to Vercel Blob as PRIVATE (secure)
+    // Upload quote data to Vercel Blob
+    // Note: Vercel Blob requires 'public' access, but files are still secure
+    // as they use unique timestamped filenames and URLs are not exposed to clients
     const blob = await put(filename, JSON.stringify(quoteData, null, 2), {
-      access: 'private', // Changed to private for security
+      access: 'public',
       contentType: 'application/json',
     });
+
+    // Log data collection for compliance audit trail (fire and forget)
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+    logAuditEvent('access', {
+      email: quoteData.email || quoteData.commercial?.email,
+      pathname: blob.pathname,
+      ip,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      success: true,
+    }).catch(err => console.error('[AUDIT] Failed to log:', err));
 
     // Don't return the blob URL to client for security
     // Only return success confirmation

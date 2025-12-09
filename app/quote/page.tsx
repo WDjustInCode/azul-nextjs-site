@@ -83,9 +83,26 @@ function QuoteWizardContent() {
   };
 
   // Send quote to API and upload to Vercel Blob
-  const completeFlow = async (nextStep: StepId = "thank-you") => {
-    const finalState = stateRef.current;
+  const completeFlow = async (nextStep: StepId = "thank-you", emailOverride?: string) => {
+    // Get the latest state, and use email override if provided
+    let finalState = stateRef.current;
+    
+    // If email override is provided, merge it into the state
+    if (emailOverride) {
+      finalState = { ...finalState, email: emailOverride };
+      // Also update the ref immediately for consistency
+      stateRef.current = finalState;
+    }
+    
     console.log("Final quote state:", finalState);
+    
+    // Validate that email is present (required for data deletion compliance)
+    const hasEmail = finalState.email || finalState.commercial?.email;
+    if (!hasEmail) {
+      console.error('Quote submission failed: Email is required but missing', finalState);
+      alert('Email is required to submit your quote. Please provide your email address.');
+      return; // Don't proceed without email
+    }
     
     // Calculate pricing based on service request
     try {
@@ -112,12 +129,14 @@ function QuoteWizardContent() {
       const result = await response.json();
       
       if (result.success) {
-        console.log('Quote submitted successfully');
+        console.log('Quote submitted successfully with email:', hasEmail);
       } else {
         console.error('Failed to submit quote:', result.error);
         // Show user-friendly error if rate limited
         if (response.status === 429) {
           alert('Too many requests. Please wait a moment and try again.');
+        } else if (response.status === 400) {
+          alert('Invalid quote data. Please check that all required fields are filled.');
         }
       }
     } catch (error) {
@@ -278,7 +297,7 @@ function QuoteWizardContent() {
           <StepEmailCapture
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
@@ -357,7 +376,7 @@ function QuoteWizardContent() {
           <StepEmailCapture
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
@@ -420,7 +439,7 @@ function QuoteWizardContent() {
           <StepEmailCapture
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
@@ -436,7 +455,7 @@ function QuoteWizardContent() {
             cta="Schedule my visit"
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
@@ -477,7 +496,7 @@ function QuoteWizardContent() {
           <StepEmailCapture
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
@@ -490,7 +509,7 @@ function QuoteWizardContent() {
           <StepAboveGroundNotice
             onEmailSubmit={(email) => {
               setState((s) => ({ ...s, email }));
-              completeFlow();
+              completeFlow("thank-you", email);
             }}
             onBack={goBack}
           />
