@@ -1,6 +1,7 @@
 import { put } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { QuoteState } from '../../quote/components/types';
+import { calculateServicePrice } from '../../utils/pricing';
 import { logAuditEvent } from '../../lib/compliance';
 
 // Simple rate limiting store (in production, use Redis or similar)
@@ -95,6 +96,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calculate pricing breakdown before persisting
+    const pricing = calculateServicePrice(quoteData);
+
+    // Enrich quote with pricing and lifecycle metadata
+    const nowIso = new Date().toISOString();
+    const quoteWithPricing: QuoteState = {
+      ...quoteData,
+      pricing,
+      status: quoteData.status || 'pending',
+      createdAt: quoteData.createdAt || nowIso,
+      updatedAt: nowIso,
+    };
+
     // Generate a unique filename with timestamp
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `quotes/quote-${timestamp}.json`;
@@ -102,7 +116,7 @@ export async function POST(request: NextRequest) {
     // Upload quote data to Vercel Blob
     // Note: Vercel Blob requires 'public' access, but files are still secure
     // as they use unique timestamped filenames and URLs are not exposed to clients
-    const blob = await put(filename, JSON.stringify(quoteData, null, 2), {
+    const blob = await put(filename, JSON.stringify(quoteWithPricing, null, 2), {
       access: 'public',
       contentType: 'application/json',
     });

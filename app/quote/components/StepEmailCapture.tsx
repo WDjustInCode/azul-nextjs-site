@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./StepEmailCapture.module.css";
 import { BackButton } from "./BackButton";
 
@@ -10,6 +10,7 @@ interface Props {
   cta?: string;
   onSubmit: (email: string) => void;
   onBack: (() => void) | null;
+  initialEmail?: string;
 }
 
 export function StepEmailCapture({
@@ -18,8 +19,14 @@ export function StepEmailCapture({
   cta = "Next",
   onSubmit,
   onBack,
+  initialEmail = "",
 }: Props) {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
+
+  // Keep field in sync if user navigates back
+  useEffect(() => {
+    setEmail(initialEmail);
+  }, [initialEmail]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

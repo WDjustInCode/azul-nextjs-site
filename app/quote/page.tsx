@@ -17,6 +17,7 @@ import { StepRegularPoolType } from "./components/StepRegularPoolType";
 import { StepRegularSpecialFlags } from "./components/StepRegularSpecialFlags";
 import { StepPoolSize } from "./components/StepPoolSize";
 import { StepEmailCapture } from "./components/StepEmailCapture";
+import { StepContactInfo } from "./components/StepContactInfo";
 import { StepAboveGroundNotice } from "./components/StepAboveGroundNotice";
 import { StepEquipmentOptions } from "./components/StepEquipmentOptions";
 import { CommercialForm } from "./components/CommercialForm";
@@ -31,6 +32,10 @@ function QuoteWizardContent() {
 
   const [state, setState] = useState<QuoteState>({
     address: addressFromUrl,
+    firstName: undefined,
+    lastName: undefined,
+    phone: undefined,
+    email: undefined,
     segment: null,
     serviceCategory: null,
     equipmentSelections: [],
@@ -48,7 +53,7 @@ function QuoteWizardContent() {
       return "manual-address-entry";
     }
     if (addressFromUrl) {
-      return "res-or-comm";
+      return "contact-info";
     }
     return "address-entry";
   };
@@ -159,7 +164,7 @@ function QuoteWizardContent() {
           <StepAddress
             onSubmit={(address) => {
               setState((s) => ({ ...s, address }));
-              goToStep("res-or-comm");
+              goToStep("contact-info");
             }}
             onBack={null}
             onSkip={() => {
@@ -179,7 +184,7 @@ function QuoteWizardContent() {
               // Format address as a single string
               const formattedAddress = `${addressData.street}, ${addressData.city}, ${addressData.state} ${addressData.zip}`;
               setState((s) => ({ ...s, address: formattedAddress }));
-              goToStep("res-or-comm");
+              goToStep("contact-info");
             }}
             onBack={cameFromHome ? () => {
               // If came from home, navigate back to home
@@ -194,6 +199,29 @@ function QuoteWizardContent() {
                 goToStep("address-entry");
               }
             })}
+          />
+        );
+
+      case "contact-info":
+        return (
+          <StepContactInfo
+            initialValues={{
+              firstName: state.firstName,
+              lastName: state.lastName,
+              email: state.email,
+              phone: state.phone,
+            }}
+            onSubmit={(info) => {
+              setState((s) => ({ ...s, ...info }));
+              goToStep("res-or-comm");
+            }}
+            onBack={
+              getPreviousStep()
+                ? goBack
+                : (() => {
+                  goToStep("address-entry");
+                })
+            }
           />
         );
 
@@ -295,6 +323,7 @@ function QuoteWizardContent() {
       case "res-regular-email":
         return (
           <StepEmailCapture
+            initialEmail={state.email || ""}
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
               completeFlow("thank-you", email);
@@ -374,6 +403,7 @@ function QuoteWizardContent() {
       case "res-equipment-email":
         return (
           <StepEmailCapture
+            initialEmail={state.email || ""}
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
               completeFlow("thank-you", email);
@@ -437,6 +467,7 @@ function QuoteWizardContent() {
       case "res-filter-email":
         return (
           <StepEmailCapture
+            initialEmail={state.email || ""}
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
               completeFlow("thank-you", email);
@@ -453,6 +484,7 @@ function QuoteWizardContent() {
             title="We need to see your pool in person"
             subtitle="Share your email and we'll reach out to schedule an on-site visit for your green-to-clean rescue."
             cta="Schedule my visit"
+            initialEmail={state.email || ""}
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
               completeFlow("thank-you", email);
@@ -494,6 +526,7 @@ function QuoteWizardContent() {
       case "res-other-email":
         return (
           <StepEmailCapture
+            initialEmail={state.email || ""}
             onSubmit={(email) => {
               setState((s) => ({ ...s, email }));
               completeFlow("thank-you", email);
@@ -512,6 +545,7 @@ function QuoteWizardContent() {
               completeFlow("thank-you", email);
             }}
             onBack={goBack}
+            initialEmail={state.email || ""}
           />
         );
 

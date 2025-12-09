@@ -9,6 +9,7 @@ export type PoolSize = "small" | "medium" | "large";
 
 export type StepId =
   | "address-entry"
+  | "contact-info"
   | "manual-address-entry"
   | "res-or-comm"
   | "res-service-type"
@@ -35,6 +36,10 @@ export type StepId =
 
 export interface QuoteState {
   address?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email?: string;
 
   segment: "residential" | "commercial" | null;
   serviceCategory: ServiceCategory | null;
@@ -54,13 +59,36 @@ export interface QuoteState {
 
   poolSize?: PoolSize;
 
-  // forms
-  email?: string;
-
   commercial?: {
     email: string;
     company: string;
     message: string;
   };
+
+  // Calculated pricing details (added server-side when quote is submitted)
+  pricing?: QuotePricing;
+
+  // Admin lifecycle metadata
+  status?: "pending" | "updated" | "accepted";
+  createdAt?: string;
+  updatedAt?: string;
+  acceptedAt?: string;
+}
+
+export interface QuotePricing {
+  basePrice: number;
+  sizeAdjustment: number;
+  poolTypeAdjustment: number;
+  specialConditionFees: number;
+  equipmentFees: number;
+  subtotal: number;
+  monthlyTotal: number;
+  isOneTime: boolean;
+  frequencyVariants: {
+    weekly: number | null;
+    biWeekly: number | null;
+    monthly: number | null;
+  };
+  breakdown: string[];
 }
 
