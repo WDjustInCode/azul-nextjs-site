@@ -1,5 +1,6 @@
 // List of cities where we provide service
 export const SERVICE_CITIES = [
+  "San Antonio",
   "Alamo Heights",
   "Atascosa",
   "Balcones Heights",
