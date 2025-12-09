@@ -39,7 +39,7 @@ export default function ServicesSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Service you can count on</h2>
+      <h2 className={styles.title}>Service You Can Count On</h2>
 
       <div className={styles.grid}>
         <div className={styles.card}>

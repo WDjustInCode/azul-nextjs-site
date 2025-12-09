@@ -227,7 +227,7 @@ export default function PopularLocationsSection() {
 
       <div className="azul-locations-inner">
         <h2 className="azul-contact-header">
-          Trusted across San Antonio & surrounding areas
+          Trusted Across San Antonio & Surrounding Areas
         </h2>
 
         <div className="azul-contact-options">

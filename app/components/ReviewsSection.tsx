@@ -210,7 +210,7 @@ export default function ReviewsSection() {
 
       <div className="azul-reviews-inner">
         <div className="azul-reviews-header-row">
-          <h2 className="azul-reviews-heading">Your neighbors will say it best</h2>
+          <h2 className="azul-reviews-heading">Your Neighbors Will Say It Best</h2>
 
           <div className="azul-reviews-meta">
             <div className="azul-reviews-avatars">

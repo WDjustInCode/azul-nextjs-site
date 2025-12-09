@@ -144,7 +144,7 @@ export default function WhatSetsUsApartSection() {
         }
       `}</style>
 
-      <h2 className="azul-title">Quality you can depend on</h2>
+      <h2 className="azul-title">Quality You Can Depend On</h2>
 
       <div className="azul-grid">
         <div className="azul-card azul-card--wide">
