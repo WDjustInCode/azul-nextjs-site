@@ -117,8 +117,13 @@ azul-nextjs-site/
 │   ├── quote/                # Quote wizard pages & components
 │   ├── privacy/              # Privacy policy & data access pages
 │   ├── admin/                # Admin dashboard
+│   │   └── quotes/
+│   │       └── page.tsx      # Admin quotes management & pricing config
+│   ├── api/
+│   │   └── admin/
+│   │       └── pricing/      # Pricing configuration API endpoints
 │   └── utils/                # Utility functions
-│       ├── pricing.ts        # Pricing calculation engine
+│       ├── pricing.ts        # Pricing calculation engine (with config support)
 │       └── serviceArea.ts   # Service area validation
 ├── public/                   # Static assets
 └── types/                    # TypeScript type definitions
@@ -603,13 +608,35 @@ Prices are calibrated based on:
 
 ### Customization
 
-To adjust pricing:
+#### Admin Dashboard Configuration (Recommended)
 
-1. **Base Prices**: Edit `BASE_PRICES` in `app/utils/pricing.ts`
-2. **Size Multipliers**: Edit `SIZE_MULTIPLIERS`
-3. **Pool Type Multipliers**: Edit `POOL_TYPE_MULTIPLIERS`
-4. **Special Fees**: Edit `SPECIAL_CONDITION_FEES`
-5. **Equipment Prices**: Edit `EQUIPMENT_PRICES`
+Pricing can be adjusted directly from the admin dashboard without code changes:
+
+1. **Access Admin Dashboard**: Navigate to `/admin/quotes` and log in
+2. **Open Pricing Config**: Click "Show Pricing Config" button
+3. **Edit Values**: Modify any pricing parameters:
+   - Base prices for each service category
+   - Size multipliers (small, medium, large)
+   - Pool type multipliers (pool-only, pool-spa, hot-tub, other)
+   - Special condition fees (saltwater, trees, above-ground)
+   - Equipment prices (pump, filter, heater, etc.)
+   - Frequency multipliers (bi-weekly, monthly)
+4. **Save**: Click "Save Config" to persist changes
+5. **Automatic Updates**: Changes take effect immediately for new quotes
+
+**Storage**: Configuration is stored in Supabase Storage at `config/pricing-config.json` in the quotes bucket. The system uses cached configuration for performance and falls back to defaults if no custom configuration exists.
+
+#### Code-Based Customization (Legacy)
+
+For developers, pricing can also be adjusted in code:
+
+1. **Base Prices**: Edit `DEFAULT_BASE_PRICES` in `app/utils/pricing.ts`
+2. **Size Multipliers**: Edit `DEFAULT_SIZE_MULTIPLIERS`
+3. **Pool Type Multipliers**: Edit `DEFAULT_POOL_TYPE_MULTIPLIERS`
+4. **Special Fees**: Edit `DEFAULT_SPECIAL_CONDITION_FEES`
+5. **Equipment Prices**: Edit `DEFAULT_EQUIPMENT_PRICES`
+
+**Note**: Admin dashboard changes override code defaults. To reset to code defaults, delete the pricing config file from Supabase Storage.
 
 ---
 
@@ -1068,6 +1095,92 @@ Request deletion of personal data (TDPSA compliance).
 ```
 
 ### Admin Endpoints
+
+#### `GET /api/admin/pricing`
+
+Get current pricing configuration (admin only).
+
+**Authentication**: Required (admin session cookie)
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  config?: {
+    basePrices: {
+      regular: number;
+      equipment: number;
+      filter: number;
+      green: number;
+      other: number;
+    };
+    sizeMultipliers: {
+      small: number;
+      medium: number;
+      large: number;
+    };
+    poolTypeMultipliers: {
+      "pool-only": number;
+      "pool-spa": number;
+      "hot-tub": number;
+      other: number;
+    };
+    specialConditionFees: {
+      saltwaterPool: number;
+      treesOverPool: number;
+      aboveGroundPool: number;
+    };
+    equipmentPrices: {
+      "Pool pump": number;
+      "Pool filter": number;
+      "Pool heater": number;
+      "Salt system": number;
+      "Automation system": number;
+      "I'm not sure / something else": number;
+    };
+    frequencyMultipliers: {
+      biWeekly: number;
+      monthly: number;
+    };
+  };
+  defaults?: PricingConfig; // Default values for reference
+  error?: string;
+}
+```
+
+**Note**: Returns merged configuration (custom values + defaults). If no custom configuration exists, returns defaults.
+
+#### `POST /api/admin/pricing`
+
+Update pricing configuration (admin only).
+
+**Authentication**: Required (admin session cookie)
+
+**Request Body**:
+```typescript
+{
+  config: {
+    basePrices?: Partial<Record<ServiceCategory, number>>;
+    sizeMultipliers?: Partial<Record<PoolSize, number>>;
+    poolTypeMultipliers?: Partial<Record<string, number>>;
+    specialConditionFees?: Partial<Record<"saltwaterPool" | "treesOverPool" | "aboveGroundPool", number>>;
+    equipmentPrices?: Partial<Record<string, number>>;
+    frequencyMultipliers?: Partial<{ biWeekly: number; monthly: number }>;
+  };
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean;
+  config?: PricingConfig; // Full merged configuration
+  message?: string;
+  error?: string;
+}
+```
+
+**Storage**: Configuration is saved to Supabase Storage at `config/pricing-config.json` in the quotes bucket. Changes take effect immediately for new quotes.
 
 #### `POST /api/admin/auth`
 

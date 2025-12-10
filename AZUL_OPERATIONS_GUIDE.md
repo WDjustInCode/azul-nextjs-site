@@ -327,14 +327,57 @@ If serviced once per month: ~$113.80/month
 
 ### Adjusting Pricing
 
+#### Editing Individual Quote Pricing
+
 **In Admin Dashboard:**
-- You can manually edit any pricing field
+- You can manually edit any pricing field for individual quotes
 - Changes are saved to the quote
 - When you accept, the updated pricing is sent to the customer
 
-**To Change Base Prices:**
-- Requires code changes (contact your developer)
+#### Changing Base Pricing Configuration
+
+**Admin Dashboard Method (Recommended):**
+
+You can now adjust base prices and multipliers directly from the admin dashboard:
+
+1. **Access Pricing Config:**
+   - Log into admin dashboard at `/admin/quotes`
+   - Click "Show Pricing Config" button (orange button in the top button row)
+
+2. **Edit Pricing Parameters:**
+   - The pricing configuration panel will display all editable pricing parameters:
+     - **Base Prices**: Regular, Equipment, Filter, Green, Other
+     - **Size Multipliers**: Small, Medium, Large pool multipliers
+     - **Pool Type Multipliers**: Pool-only, Pool+spa, Hot-tub, Other
+     - **Special Condition Fees**: Saltwater, Trees over pool, Above-ground pool
+     - **Equipment Prices**: Pump, Filter, Heater, Salt system, Automation, Other
+     - **Frequency Multipliers**: Bi-weekly and monthly service multipliers
+
+3. **Make Changes:**
+   - Click in any field to edit the value
+   - Changes are applied immediately in the form
+   - All fields are organized in easy-to-read sections
+
+4. **Save Configuration:**
+   - Click "Save Config" button (green button)
+   - You'll see a success message confirming the save
+   - Changes take effect immediately for all new quotes
+
+5. **Refresh to Reload:**
+   - Click "Refresh" button to reload the current configuration
+   - Useful if you want to see the latest saved values
+
+**Important Notes:**
+- Changes apply to **all new quotes** submitted after saving
+- Existing quotes are not affected (they keep their original pricing)
+- Configuration is stored securely in Supabase Storage
+- If you make a mistake, you can always edit and save again
+- The system falls back to default values if no custom configuration exists
+
+**Legacy Method (Code Changes):**
+- Requires developer assistance
 - Base prices are in `app/utils/pricing.ts`
+- Not recommended - use admin dashboard instead
 
 ---
 
@@ -461,6 +504,10 @@ Email templates are in `app/lib/email.ts`. To customize:
 3. Click "Login"
 
 **Security:**
+- Password-protected access
+- Session-based authentication (24-hour sessions)
+- Rate limiting on login attempts (5 attempts, then 15-minute lockout)
+- All admin actions are logged for audit purposes
 - Password is set via `ADMIN_PASSWORD` environment variable
 - Sessions expire after 24 hours
 - Rate limiting: 5 failed attempts, 15-minute lockout
@@ -502,16 +549,16 @@ The admin dashboard has two main sections:
 - **Updated** - Pricing has been manually adjusted
 - **Accepted** - Quote approved and email sent
 
-#### 2. Editing Pricing
+#### 2. Editing Individual Quote Pricing
 
 **When to Edit:**
-- If automatic calculation seems incorrect
-- For special cases or discounts
-- To adjust for market conditions
+- If automatic calculation seems incorrect for a specific quote
+- For special cases or discounts for individual customers
+- To adjust for unique circumstances
 - For commercial quotes (no auto-pricing)
 
-**How to Edit:**
-1. Select a quote
+**How to Edit Individual Quote:**
+1. Select a quote from the list
 2. Scroll to "Pricing (editable)" section
 3. Edit any field:
    - Base price
@@ -527,9 +574,40 @@ The admin dashboard has two main sections:
 5. Quote status changes to "updated"
 
 **Important:** 
-- Changes are saved immediately
+- Changes are saved immediately to that specific quote only
 - Original calculated pricing is preserved in breakdown
 - You can always revert to original calculation
+- This only affects the selected quote, not future quotes
+
+#### 2b. Editing Global Pricing Configuration
+
+**When to Edit:**
+- To adjust base prices for all future quotes
+- To change multipliers (size, pool type, frequency)
+- To update equipment prices
+- To modify special condition fees
+- When market conditions change
+
+**How to Edit Global Pricing:**
+1. Click "Show Pricing Config" button in the top button bar
+2. The Pricing Configuration panel will appear
+3. Edit any values in the displayed sections:
+   - **Base Prices**: Service category base prices
+   - **Size Multipliers**: Small/medium/large multipliers
+   - **Pool Type Multipliers**: Pool-only/pool-spa/hot-tub multipliers
+   - **Special Condition Fees**: Saltwater/trees/above-ground fees
+   - **Equipment Prices**: Individual equipment item prices
+   - **Frequency Multipliers**: Bi-weekly/monthly service multipliers
+4. Click "Save Config" button
+5. Success message will confirm the save
+6. All new quotes will use the updated pricing
+
+**Important:**
+- Changes apply to **all new quotes** submitted after saving
+- Existing quotes are not affected
+- Configuration is stored securely and persists across sessions
+- You can refresh to see the current saved values
+- If you need to revert, you can edit and save the original values
 
 #### 3. Accepting Quotes
 
