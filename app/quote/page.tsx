@@ -87,7 +87,7 @@ function QuoteWizardContent() {
     }
   };
 
-  // Send quote to API and upload to Vercel Blob
+  // Send quote to API and store in Supabase Storage
   const completeFlow = async (nextStep: StepId = "thank-you", emailOverride?: string) => {
     // Get the latest state, and use email override if provided
     let finalState = stateRef.current;
@@ -111,7 +111,7 @@ function QuoteWizardContent() {
     
     // Calculate pricing based on service request
     try {
-      const pricing = calculateServicePrice(finalState);
+      const pricing = await calculateServicePrice(finalState);
       console.log("Service pricing calculation:", {
         monthlyTotal: `$${pricing.monthlyTotal.toFixed(2)}/month`,
         annualTotal: `$${(pricing.monthlyTotal * 12).toFixed(2)}/year`,
@@ -121,7 +121,7 @@ function QuoteWizardContent() {
       console.error("Error calculating pricing:", error);
     }
     
-    // Send quote to API route for Vercel Blob upload
+    // Send quote to API route for Supabase Storage upload
     try {
       const response = await fetch('/api/quotes', {
         method: 'POST',

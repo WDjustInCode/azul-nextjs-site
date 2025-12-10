@@ -1,6 +1,7 @@
-import { list } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '../../../lib/auth';
+import { isDataExpired } from '../../../lib/compliance';
+import { deleteQuote, listQuotes } from '../../../lib/storage';
 
 export async function GET(request: NextRequest) {
   // Check authentication - pass request cookies to read from request
@@ -14,14 +15,24 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // List all blobs with the 'quotes/' prefix
-    const { blobs } = await list({
-      prefix: 'quotes/',
-      limit: 1000, // Adjust as needed
-    });
+    // List all quotes in storage
+    const objects = await listQuotes();
+
+    // Enforce retention: delete expired objects before returning list
+    await Promise.all(
+      objects.map(async (obj) => {
+        if (obj.uploadedAt && isDataExpired(obj.uploadedAt)) {
+          try {
+            await deleteQuote(obj.pathname);
+          } catch (error) {
+            console.error(`[LIST] Failed to delete expired object ${obj.pathname}:`, error);
+          }
+        }
+      })
+    );
 
     // Sort by upload date (newest first)
-    const sortedBlobs = blobs.sort((a, b) => {
+    const sortedObjects = objects.sort((a, b) => {
       const dateA = a.uploadedAt ? new Date(a.uploadedAt).getTime() : 0;
       const dateB = b.uploadedAt ? new Date(b.uploadedAt).getTime() : 0;
       return dateB - dateA;
@@ -30,18 +41,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        count: sortedBlobs.length,
-        blobs: sortedBlobs.map((blob) => ({
-          pathname: blob.pathname,
-          url: blob.url,
-          size: blob.size,
-          uploadedAt: blob.uploadedAt,
+        count: sortedObjects.length,
+        objects: sortedObjects.map((obj) => ({
+          pathname: obj.pathname,
+          size: obj.size,
+          uploadedAt: obj.uploadedAt,
         })),
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error listing blobs:', error);
+    console.error('Error listing storage objects:', error);
     return NextResponse.json(
       {
         success: false,

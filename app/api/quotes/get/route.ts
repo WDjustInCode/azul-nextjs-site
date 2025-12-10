@@ -1,7 +1,7 @@
-import { head } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '../../../lib/auth';
 import { logAuditEvent } from '../../../lib/compliance';
+import { downloadQuote } from '../../../lib/storage';
 
 export async function GET(request: NextRequest) {
   // Check authentication - pass request cookies to read from request
@@ -25,19 +25,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get blob metadata
-    const blob = await head(pathname);
-
-    // Fetch the actual content
-    const response = await fetch(blob.url);
-    const content = await response.text();
-
-    let quoteData;
-    try {
-      quoteData = JSON.parse(content);
-    } catch {
-      quoteData = content;
-    }
+    const quoteData = await downloadQuote<any>(pathname);
 
     // Log admin viewing for compliance audit trail
     const forwarded = request.headers.get('x-forwarded-for');
@@ -46,7 +34,7 @@ export async function GET(request: NextRequest) {
     
     logAuditEvent('view', {
       email: quoteData.email || quoteData.commercial?.email,
-      pathname: blob.pathname,
+      pathname,
       ip,
       userAgent,
       success: true,
@@ -55,19 +43,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        blob: {
-          pathname: blob.pathname,
-          url: blob.url,
-          size: blob.size,
-          uploadedAt: blob.uploadedAt,
-          contentType: blob.contentType,
-        },
         data: quoteData,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error getting blob:', error);
+    console.error('Error getting quote object:', error);
     return NextResponse.json(
       {
         success: false,

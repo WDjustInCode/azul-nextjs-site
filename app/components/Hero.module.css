@@ -63,6 +63,7 @@
     display: flex;
     gap: 12px;
     margin-bottom: 24px;
+    max-width: 600px;
     flex-wrap: wrap;
 }
 
