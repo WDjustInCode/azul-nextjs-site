@@ -1,8 +1,8 @@
-import { put } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { QuoteState } from '../../quote/components/types';
 import { calculateServicePrice } from '../../utils/pricing';
 import { logAuditEvent } from '../../lib/compliance';
+import { uploadQuote } from '../../lib/storage';
 
 // Simple rate limiting store (in production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate pricing breakdown before persisting
-    const pricing = calculateServicePrice(quoteData);
+    const pricing = await calculateServicePrice(quoteData);
 
     // Enrich quote with pricing and lifecycle metadata
     const nowIso = new Date().toISOString();
@@ -113,26 +113,21 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `quotes/quote-${timestamp}.json`;
 
-    // Upload quote data to Vercel Blob
-    // Note: Vercel Blob requires 'public' access, but files are still secure
-    // as they use unique timestamped filenames and URLs are not exposed to clients
-    const blob = await put(filename, JSON.stringify(quoteWithPricing, null, 2), {
-      access: 'public',
-      contentType: 'application/json',
-    });
+    // Upload quote data to Supabase Storage (private bucket)
+    await uploadQuote(filename, quoteWithPricing);
 
     // Log data collection for compliance audit trail (fire and forget)
     const forwarded = request.headers.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
     logAuditEvent('access', {
       email: quoteData.email || quoteData.commercial?.email,
-      pathname: blob.pathname,
+      pathname: filename,
       ip,
       userAgent: request.headers.get('user-agent') || 'unknown',
       success: true,
     }).catch(err => console.error('[AUDIT] Failed to log:', err));
 
-    // Don't return the blob URL to client for security
+    // Don't return storage URLs to client for security
     // Only return success confirmation
     return NextResponse.json(
       {
@@ -142,7 +137,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error uploading quote to blob:', error);
+    console.error('Error uploading quote to storage:', error);
     return NextResponse.json(
       {
         success: false,

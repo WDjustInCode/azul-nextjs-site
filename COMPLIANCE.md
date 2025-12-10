@@ -49,7 +49,7 @@ This document outlines the compliance features implemented for your pool service
 
 ### 5. **Data Security Measures**
 - ✅ Data encrypted in transit (HTTPS)
-- ✅ Data stored in private, encrypted Vercel Blob storage
+- ✅ Data stored in private, encrypted Supabase Storage
 - ✅ Access controls with secure authentication
 - ✅ Rate limiting to prevent abuse
 - ✅ Signed session tokens
@@ -98,8 +98,8 @@ This document outlines the compliance features implemented for your pool service
    - HTTP-only cookies
 
 2. **Data Protection**
-   - Private blob storage (not publicly accessible)
-   - Encrypted data storage (Vercel Blob)
+   - Private Supabase Storage buckets (not publicly accessible)
+   - Encrypted data storage (Supabase Storage)
    - HTTPS only in production
    - Input validation
 
@@ -228,7 +228,7 @@ Each log entry includes:
 ## 📚 Resources
 
 - [Texas Data Privacy and Security Act (TDPSA)](https://capitol.texas.gov/tlodocs/88R/billtext/html/HB00004F.htm)
-- [Vercel Blob Storage Security](https://vercel.com/docs/storage/vercel-blob)
+- [Supabase Storage Security](https://supabase.com/docs/guides/security/policies#storage)
 - [TDPSA Business Guide](https://www.fisherphillips.com/en/news-insights/faqs-businesses-texas-data-privacy-law.html)
 
 ---

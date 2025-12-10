@@ -1,8 +1,8 @@
-import { head, put } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '../../../lib/auth';
 import { logAuditEvent } from '../../../lib/compliance';
 import { QuoteState, QuotePricing } from '../../../quote/components/types';
+import { downloadQuote, uploadQuote } from '../../../lib/storage';
 
 export async function POST(request: NextRequest) {
   const isAuthenticated = await validateSession(request.cookies);
@@ -19,10 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'pathname is required' }, { status: 400 });
     }
 
-    const blob = await head(pathname);
-    const response = await fetch(blob.url);
-    const content = await response.text();
-    const quoteData: QuoteState = JSON.parse(content);
+    const quoteData = await downloadQuote<QuoteState>(pathname);
 
     const nowIso = new Date().toISOString();
     const updatedQuote: QuoteState = {
@@ -32,11 +29,7 @@ export async function POST(request: NextRequest) {
       updatedAt: nowIso,
     };
 
-    await put(pathname, JSON.stringify(updatedQuote, null, 2), {
-      access: 'public',
-      contentType: 'application/json',
-      allowOverwrite: true,
-    });
+    await uploadQuote(pathname, updatedQuote, true);
 
     logAuditEvent('access', {
       email: quoteData.email || quoteData.commercial?.email,

@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-interface BlobInfo {
+interface QuoteObjectInfo {
   pathname: string;
-  url: string;
   size: number;
   uploadedAt: string;
 }
@@ -25,7 +24,7 @@ export default function QuotesAdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
-  const [blobs, setBlobs] = useState<BlobInfo[]>([]);
+  const [quoteObjects, setQuoteObjects] = useState<QuoteObjectInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState<QuoteData | null>(null);
   const [selectedPathname, setSelectedPathname] = useState<string | null>(null);
@@ -39,6 +38,10 @@ export default function QuotesAdminPage() {
   const [savingPricing, setSavingPricing] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [showPricingConfig, setShowPricingConfig] = useState(false);
+  const [pricingConfig, setPricingConfig] = useState<any | null>(null);
+  const [loadingPricingConfig, setLoadingPricingConfig] = useState(false);
+  const [savingPricingConfig, setSavingPricingConfig] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +58,7 @@ export default function QuotesAdminPage() {
 
     if (result.success) {
       setAuthenticated(true);
-      fetchBlobs();
+      fetchQuotes();
     } else {
       let errorMsg = result.error || "Invalid password";
       if (result.remainingAttempts !== undefined) {
@@ -74,7 +77,7 @@ export default function QuotesAdminPage() {
       const result = await response.json();
       if (result.authenticated) {
         setAuthenticated(true);
-        fetchBlobs();
+        fetchQuotes();
       }
     };
     checkAuth();
@@ -91,7 +94,7 @@ export default function QuotesAdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auditEmailFilter, showAuditLogs, authenticated]);
 
-  const fetchBlobs = async () => {
+  const fetchQuotes = async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/quotes/list", {
@@ -100,7 +103,7 @@ export default function QuotesAdminPage() {
       const result = await response.json();
 
       if (result.success) {
-        setBlobs(result.blobs);
+        setQuoteObjects(result.objects);
       } else {
         setError(result.error || "Failed to load quotes");
       }
@@ -257,6 +260,67 @@ export default function QuotesAdminPage() {
     }
   };
 
+  const fetchPricingConfig = async () => {
+    try {
+      setLoadingPricingConfig(true);
+      setError(null); // Clear any previous errors
+      const response = await fetch("/api/admin/pricing", {
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (result.success) {
+        setPricingConfig(result.config);
+        setError(null); // Clear errors on success
+      } else {
+        setError(result.error || "Failed to load pricing configuration");
+      }
+    } catch (err) {
+      setError("Error fetching pricing configuration");
+      console.error(err);
+    } finally {
+      setLoadingPricingConfig(false);
+    }
+  };
+
+  const savePricingConfig = async () => {
+    if (!pricingConfig) return;
+    setSavingPricingConfig(true);
+    setActionMessage(null);
+    try {
+      const response = await fetch("/api/admin/pricing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ config: pricingConfig }),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (result.success) {
+        setPricingConfig(result.config);
+        setActionMessage("Pricing configuration saved successfully!");
+        setError(null); // Clear any previous errors
+      } else {
+        setError(result.error || "Failed to save pricing configuration");
+        setActionMessage(null); // Clear success message on error
+      }
+    } catch (err) {
+      setError("Error saving pricing configuration");
+      setActionMessage(null); // Clear success message on error
+      console.error(err);
+    } finally {
+      setSavingPricingConfig(false);
+    }
+  };
+
+  const handlePricingConfigChange = (section: string, key: string, value: any) => {
+    setPricingConfig((prev: any) => ({
+      ...prev,
+      [section]: {
+        ...(prev?.[section] || {}),
+        [key]: typeof value === 'string' && value !== '' ? parseFloat(value) || 0 : value,
+      },
+    }));
+  };
+
   // Show login form if not authenticated
   if (!authenticated) {
     return (
@@ -363,7 +427,7 @@ export default function QuotesAdminPage() {
               credentials: 'include',
             }).finally(() => {
               setAuthenticated(false);
-              setBlobs([]);
+              setQuoteObjects([]);
               setSelectedQuote(null);
               router.push("/");
             });
@@ -383,7 +447,7 @@ export default function QuotesAdminPage() {
 
       <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
         <button
-          onClick={fetchBlobs}
+          onClick={fetchQuotes}
           disabled={loading}
           style={{
             padding: "0.5rem 1rem",
@@ -414,6 +478,24 @@ export default function QuotesAdminPage() {
         >
           {showAuditLogs ? "Hide" : "Show"} Audit Logs
         </button>
+        <button
+          onClick={() => {
+            setShowPricingConfig(!showPricingConfig);
+            if (!showPricingConfig && !pricingConfig) {
+              fetchPricingConfig();
+            }
+          }}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: showPricingConfig ? "#ff6b35" : "#6c757d",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          {showPricingConfig ? "Hide" : "Show"} Pricing Config
+        </button>
       </div>
 
       {error && (
@@ -427,6 +509,173 @@ export default function QuotesAdminPage() {
           }}
         >
           {error}
+        </div>
+      )}
+
+      {showPricingConfig && (
+        <div
+          style={{
+            marginBottom: "2rem",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            padding: "1rem",
+            backgroundColor: "#fafafa",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+            <h2 style={{ margin: 0 }}>Pricing Configuration</h2>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <button
+                onClick={fetchPricingConfig}
+                disabled={loadingPricingConfig}
+                style={{
+                  padding: "0.5rem 1rem",
+                  backgroundColor: "#0070f3",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: loadingPricingConfig ? "not-allowed" : "pointer",
+                }}
+              >
+                {loadingPricingConfig ? "Loading..." : "Refresh"}
+              </button>
+              <button
+                onClick={savePricingConfig}
+                disabled={savingPricingConfig || !pricingConfig}
+                style={{
+                  padding: "0.5rem 1rem",
+                  backgroundColor: "#28a745",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: savingPricingConfig ? "not-allowed" : "pointer",
+                }}
+              >
+                {savingPricingConfig ? "Saving..." : "Save Config"}
+              </button>
+            </div>
+          </div>
+          {actionMessage && (
+            <div style={{ 
+              padding: "0.75rem 1rem", 
+              background: "#e7f7ed", 
+              border: "1px solid #cde8d9", 
+              borderRadius: "6px", 
+              marginBottom: "1rem",
+              color: "#155724"
+            }}>
+              {actionMessage}
+            </div>
+          )}
+          {loadingPricingConfig ? (
+            <p>Loading pricing configuration...</p>
+          ) : pricingConfig ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem" }}>
+              {/* Base Prices */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Base Prices</h3>
+                {Object.entries(pricingConfig.basePrices || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("basePrices", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Size Multipliers */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Size Multipliers</h3>
+                {Object.entries(pricingConfig.sizeMultipliers || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.001"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("sizeMultipliers", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Pool Type Multipliers */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Pool Type Multipliers</h3>
+                {Object.entries(pricingConfig.poolTypeMultipliers || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("poolTypeMultipliers", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Special Condition Fees */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Special Condition Fees</h3>
+                {Object.entries(pricingConfig.specialConditionFees || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("specialConditionFees", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Equipment Prices */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Equipment Prices</h3>
+                {Object.entries(pricingConfig.equipmentPrices || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("equipmentPrices", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Frequency Multipliers */}
+              <div style={{ background: "white", padding: "1rem", borderRadius: "4px", border: "1px solid #ddd" }}>
+                <h3 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Frequency Multipliers</h3>
+                {Object.entries(pricingConfig.frequencyMultipliers || {}).map(([key, value]) => (
+                  <label key={key} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={value as number}
+                      onChange={(e) => handlePricingConfigChange("frequencyMultipliers", key, e.target.value)}
+                      style={{ padding: "0.5rem", border: "1px solid #ccc", borderRadius: "4px" }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No pricing configuration loaded.</p>
+          )}
         </div>
       )}
 
@@ -551,45 +800,45 @@ export default function QuotesAdminPage() {
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
-        {/* Blobs List */}
+        {/* Quote objects list */}
         <div>
           <h2 style={{ marginBottom: "1rem" }}>
-            All Quotes ({blobs.length})
+            All Quotes ({quoteObjects.length})
           </h2>
           {loading ? (
             <p>Loading quotes...</p>
-          ) : blobs.length === 0 ? (
+          ) : quoteObjects.length === 0 ? (
             <p>No quotes found.</p>
           ) : (
             <div style={{ border: "1px solid #ddd", borderRadius: "4px", overflow: "hidden" }}>
-              {blobs.map((blob) => (
+              {quoteObjects.map((obj) => (
                 <div
-                  key={blob.pathname}
-                  onClick={() => fetchQuote(blob.pathname)}
+                  key={obj.pathname}
+                  onClick={() => fetchQuote(obj.pathname)}
                   style={{
                     padding: "1rem",
                     borderBottom: "1px solid #eee",
                     cursor: "pointer",
                     backgroundColor:
-                      selectedPathname === blob.pathname ? "#f0f8ff" : "white",
+                      selectedPathname === obj.pathname ? "#f0f8ff" : "white",
                     transition: "background-color 0.2s",
                   }}
                   onMouseEnter={(e) => {
-                    if (selectedPathname !== blob.pathname) {
+                    if (selectedPathname !== obj.pathname) {
                       e.currentTarget.style.backgroundColor = "#f9f9f9";
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (selectedPathname !== blob.pathname) {
+                    if (selectedPathname !== obj.pathname) {
                       e.currentTarget.style.backgroundColor = "white";
                     }
                   }}
                 >
                   <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
-                    {blob.pathname.split("/").pop()}
+                    {obj.pathname.split("/").pop()}
                   </div>
                   <div style={{ fontSize: "0.875rem", color: "#666" }}>
-                    {formatDate(blob.uploadedAt)} • {formatSize(blob.size)}
+                    {formatDate(obj.uploadedAt)} • {formatSize(obj.size)}
                   </div>
                 </div>
               ))}

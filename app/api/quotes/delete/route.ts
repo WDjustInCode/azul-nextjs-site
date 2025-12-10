@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { list, del } from '@vercel/blob';
 import { logAuditEvent, generateVerificationCode, verifyCode } from '../../../lib/compliance';
 import { validateSession } from '../../../lib/auth';
 import { sendDeletionConfirmation, sendDeletionVerificationCode } from '../../../lib/email';
+import { deleteQuote, downloadQuote, listQuotes } from '../../../lib/storage';
 
 /**
  * TDPSA Compliance: Right to Delete Personal Data
@@ -123,10 +123,7 @@ export async function POST(request: NextRequest) {
       }
 
       // List all quotes
-    const { blobs } = await list({
-      prefix: 'quotes/',
-      limit: 1000,
-    });
+      const objects = await listQuotes();
 
     // Find and delete quotes matching the email
     const deletedQuotes: string[] = [];
@@ -134,23 +131,17 @@ export async function POST(request: NextRequest) {
     const emailLower = email.toLowerCase();
     
     console.log(`[DELETE] Searching for quotes with email: ${email}`);
-    console.log(`[DELETE] Total blobs to check: ${blobs.length}`);
+    console.log(`[DELETE] Total objects to check: ${objects.length}`);
     
-    for (const blob of blobs) {
+    for (const obj of objects) {
       try {
-        // Fetch blob content
-        const response = await fetch(blob.url);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch blob: ${response.status}`);
-        }
-        const content = await response.text();
-        const quoteData = JSON.parse(content);
+        const quoteData = await downloadQuote<any>(obj.pathname);
         
         // Debug: log the structure of each quote
         const quoteEmail = quoteData.email?.toLowerCase();
         const commercialEmail = quoteData.commercial?.email?.toLowerCase();
         
-        console.log(`[DELETE] Checking blob ${blob.pathname}:`, {
+        console.log(`[DELETE] Checking object ${obj.pathname}:`, {
           hasEmail: !!quoteData.email,
           email: quoteData.email,
           hasCommercial: !!quoteData.commercial,
@@ -161,13 +152,13 @@ export async function POST(request: NextRequest) {
         const emailMatches = quoteEmail === emailLower || commercialEmail === emailLower;
         
         if (emailMatches) {
-          console.log(`[DELETE] Match found! Deleting ${blob.pathname}`);
-          // Delete the blob
-          await del(blob.pathname);
-          deletedQuotes.push(blob.pathname);
+          console.log(`[DELETE] Match found! Deleting ${obj.pathname}`);
+          // Delete the stored object
+          await deleteQuote(obj.pathname);
+          deletedQuotes.push(obj.pathname);
         }
       } catch (error) {
-        const errorMsg = `Error processing ${blob.pathname}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        const errorMsg = `Error processing ${obj.pathname}: ${error instanceof Error ? error.message : 'Unknown error'}`;
         errors.push(errorMsg);
         console.error(`[DELETE] ${errorMsg}`, error);
       }

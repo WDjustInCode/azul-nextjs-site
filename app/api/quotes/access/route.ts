@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { list } from '@vercel/blob';
 import { logAuditEvent, generateVerificationCode, verifyCode } from '../../../lib/compliance';
 import { validateSession } from '../../../lib/auth';
 import { sendVerificationCode } from '../../../lib/email';
+import { downloadQuote, listQuotes } from '../../../lib/storage';
 
 /**
  * TDPSA Compliance: Right to Access Personal Data
@@ -111,20 +111,14 @@ export async function POST(request: NextRequest) {
       }
 
       // Code verified - fetch and return data
-      const { blobs } = await list({
-        prefix: 'quotes/',
-        limit: 1000,
-      });
+      const objects = await listQuotes();
 
       // Find quotes matching the email
       const matchingQuotes: any[] = [];
       
-      for (const blob of blobs) {
+      for (const obj of objects) {
         try {
-          // Fetch blob content
-          const response = await fetch(blob.url);
-          const content = await response.text();
-          const quoteData = JSON.parse(content);
+          const quoteData = await downloadQuote<any>(obj.pathname);
           
           // Check if email matches
           if (
@@ -132,14 +126,14 @@ export async function POST(request: NextRequest) {
             quoteData.commercial?.email?.toLowerCase() === email.toLowerCase()
           ) {
             matchingQuotes.push({
-              pathname: blob.pathname,
-              uploadedAt: blob.uploadedAt,
+              pathname: obj.pathname,
+              uploadedAt: obj.uploadedAt,
               data: quoteData,
             });
           }
         } catch (error) {
-          // Skip blobs that can't be read
-          console.error(`Error reading blob ${blob.pathname}:`, error);
+          // Skip objects that can't be read
+          console.error(`Error reading object ${obj.pathname}:`, error);
         }
       }
 

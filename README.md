@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Azul Pool Services - Next.js Web Application
 
-## Getting Started
+A comprehensive pool service quote management system built with Next.js, featuring dynamic pricing, TDPSA compliance, and a multi-step quote wizard.
 
-First, run the development server:
+## 📚 Documentation
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**For complete documentation, see [DOCUMENTATION.md](./DOCUMENTATION.md)**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The documentation covers:
+- **Getting Started**: Installation, setup, and configuration
+- **Application Overview**: Architecture and key features
+- **Quote Flow**: Detailed walkthrough of the multi-step quote wizard
+- **Pricing & Calculations**: Complete pricing engine documentation with examples
+- **Security & Compliance**: TDPSA compliance, security features, and audit logging
+- **API Reference**: All endpoints and data types
+- **Deployment**: Vercel deployment guide
+- **Troubleshooting**: Common issues and solutions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quick Start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables** (create `.env.local`):
+   ```bash
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   SUPABASE_QUOTES_BUCKET=quotes
+   SUPABASE_AUDIT_BUCKET=audit-logs
+   RESEND_API_KEY=re_your_resend_api_key
+   RESEND_FROM_EMAIL=noreply@yourdomain.com
+   COMPANY_NAME=Azul Pool Services
+   ADMIN_PASSWORD=your_secure_admin_password
+   SESSION_SECRET=your_random_session_secret
+   ```
+
+3. **Run development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Open browser**: [http://localhost:3000](http://localhost:3000)
+
+## Additional Documentation
+
+- **[DOCUMENTATION.md](./DOCUMENTATION.md)** - Complete application documentation
+- **[COMPLIANCE.md](./COMPLIANCE.md)** - TDPSA compliance details
+- **[EMAIL_SETUP.md](./EMAIL_SETUP.md)** - Email service configuration guide
+
+## Key Features
+
+- ✅ Multi-step quote wizard with dynamic flow
+- ✅ Real-time pricing calculations
+- ✅ Residential & commercial support
+- ✅ TDPSA compliance (data access, deletion, audit logging)
+- ✅ Admin dashboard for quote management
+- ✅ Secure authentication and rate limiting
+- ✅ Email verification for data requests
+
+## Technology Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **UI**: React 19
+- **Storage**: Supabase Storage (private buckets)
+- **Email**: Resend
+- **Deployment**: Vercel
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Vercel Deployment](https://vercel.com/docs)
+- [TDPSA Information](https://capitol.texas.gov/tlodocs/88R/billtext/html/HB00004F.htm)

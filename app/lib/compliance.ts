@@ -1,5 +1,5 @@
 // Compliance logging and audit trail
-import { put, list, del, head } from '@vercel/blob';
+import { downloadAuditLog, listAuditLogs, uploadAuditLog } from './storage';
 
 interface AuditLog {
   timestamp: string;
@@ -20,7 +20,7 @@ interface VerificationCode {
   attempts: number;
 }
 
-// In-memory cache for quick access (also persisted to Vercel Blob)
+// In-memory cache for quick access (also persisted to Supabase Storage)
 const auditLogsCache: AuditLog[] = [];
 const CACHE_SIZE = 1000; // Keep last 1000 in memory
 
@@ -30,7 +30,7 @@ const CODE_EXPIRY = 15 * 60 * 1000; // 15 minutes
 const MAX_VERIFICATION_ATTEMPTS = 5;
 
 /**
- * Log an audit event - persists to Vercel Blob storage for compliance
+ * Log an audit event - persists to Supabase Storage for compliance
  */
 export async function logAuditEvent(
   action: AuditLog['action'],
@@ -55,18 +55,15 @@ export async function logAuditEvent(
     auditLogsCache.shift();
   }
   
-  // Persist to Vercel Blob storage
+  // Persist to Supabase Storage
   try {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `audit-logs/${timestamp}-${Date.now()}.json`;
     
-    await put(filename, JSON.stringify(log), {
-      access: 'public',
-      contentType: 'application/json',
-    });
+    await uploadAuditLog(filename, log);
   } catch (error) {
     // Log error but don't fail - audit logging should be non-blocking
-    console.error('[AUDIT] Failed to persist to blob storage:', error);
+    console.error('[AUDIT] Failed to persist to storage:', error);
   }
   
   // Also log to console for production monitoring
@@ -74,7 +71,7 @@ export async function logAuditEvent(
 }
 
 /**
- * Get audit logs - combines in-memory cache with persisted logs from Vercel Blob
+ * Get audit logs - combines in-memory cache with persisted logs from Supabase Storage
  */
 export async function getAuditLogs(email?: string, limit: number = 100): Promise<AuditLog[]> {
   const allLogs: AuditLog[] = [];
@@ -82,33 +79,28 @@ export async function getAuditLogs(email?: string, limit: number = 100): Promise
   // Start with in-memory cache (most recent)
   allLogs.push(...auditLogsCache);
   
-  // Fetch from Vercel Blob storage
+  // Fetch from Supabase Storage
   try {
-    const { blobs } = await list({
-      prefix: 'audit-logs/',
-      limit: 1000, // Get up to 1000 most recent logs from blob
-    });
+    const objects = await listAuditLogs();
     
-    // Fetch and parse all blob contents
-    const blobLogs = await Promise.all(
-      blobs.map(async (blob) => {
+    // Fetch and parse all stored audit objects
+    const objectLogs = await Promise.all(
+      objects.map(async (obj) => {
         try {
-          const response = await fetch(blob.url);
-          const content = await response.text();
-          return JSON.parse(content) as AuditLog;
+          return await downloadAuditLog<AuditLog>(obj.pathname);
         } catch (error) {
-          console.error(`[AUDIT] Failed to read log ${blob.pathname}:`, error);
+          console.error(`[AUDIT] Failed to read log ${obj.pathname}:`, error);
           return null;
         }
       })
     );
     
     // Filter out nulls and add to allLogs
-    const validBlobLogs = blobLogs.filter((log): log is AuditLog => log !== null);
-    allLogs.push(...validBlobLogs);
+    const validObjectLogs = objectLogs.filter((log): log is AuditLog => log !== null);
+    allLogs.push(...validObjectLogs);
   } catch (error) {
-    console.error('[AUDIT] Failed to fetch logs from blob storage:', error);
-    // Continue with just in-memory cache if blob fetch fails
+    console.error('[AUDIT] Failed to fetch logs from storage:', error);
+    // Continue with just in-memory cache if storage fetch fails
   }
   
   // Sort by timestamp (most recent first) and deduplicate

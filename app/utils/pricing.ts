@@ -7,9 +7,8 @@ import { QuoteState, PoolSize, ServiceCategory } from "../quote/components/types
  * - Bi-weekly and monthly variants are derived for display only
  */
 
-// Base prices (for WEEKLY full-service or equivalent, MEDIUM pool)
-// For one-time categories, this is a base job anchor (not monthly).
-const BASE_PRICES: Record<ServiceCategory, number> = {
+// Default pricing configuration (used as fallback)
+const DEFAULT_BASE_PRICES: Record<ServiceCategory, number> = {
   regular: 210, // Weekly full-service maintenance, medium in-ground pool
   equipment: 150, // Base job anchor for equipment (trip + first hour, etc.)
   filter: 150, // Weekly chemical-only / light service for medium pool
@@ -17,15 +16,13 @@ const BASE_PRICES: Record<ServiceCategory, number> = {
   other: 210, // Default to regular pricing
 } as const;
 
-// Pool size multipliers tuned to land near 190/210/230 for small/medium/large weekly full-service
-const SIZE_MULTIPLIERS: Record<PoolSize, number> = {
+const DEFAULT_SIZE_MULTIPLIERS: Record<PoolSize, number> = {
   small: 190 / 210, // ≈ 0.90 – 15k gal or less
   medium: 1.0,      // 15–25k gal
   large: 230 / 210, // ≈ 1.095 – 25k+ gal
 };
 
-// Special condition add-ons (recurring, per month)
-const SPECIAL_CONDITION_FEES: Record<
+const DEFAULT_SPECIAL_CONDITION_FEES: Record<
   "saltwaterPool" | "treesOverPool" | "aboveGroundPool",
   number
 > = {
@@ -34,16 +31,14 @@ const SPECIAL_CONDITION_FEES: Record<
   aboveGroundPool: -20, // Slight discount vs in-ground baseline
 };
 
-// Pool type adjustments
-const POOL_TYPE_MULTIPLIERS = {
+const DEFAULT_POOL_TYPE_MULTIPLIERS = {
   "pool-only": 1.0,
   "pool-spa": 1.15, // 15% premium for pool + spa combo
   "hot-tub": 0.6,   // Hot tub only (smaller volume)
   other: 1.0,
 } as const;
 
-// Equipment service pricing (per-visit / per-job anchors)
-const EQUIPMENT_PRICES: Record<string, number> = {
+const DEFAULT_EQUIPMENT_PRICES: Record<string, number> = {
   "Pool pump": 120,
   "Pool filter": 100,
   "Pool heater": 150,
@@ -52,24 +47,112 @@ const EQUIPMENT_PRICES: Record<string, number> = {
   "I'm not sure / something else": 130,
 };
 
+const DEFAULT_FREQUENCY_MULTIPLIERS = {
+  biWeekly: 0.65,
+  monthly: 0.4,
+};
+
+// Pricing configuration type
+export type PricingConfig = {
+  basePrices: Record<ServiceCategory, number>;
+  sizeMultipliers: Record<PoolSize, number>;
+  poolTypeMultipliers: Record<string, number>;
+  specialConditionFees: Record<"saltwaterPool" | "treesOverPool" | "aboveGroundPool", number>;
+  equipmentPrices: Record<string, number>;
+  frequencyMultipliers: {
+    biWeekly: number;
+    monthly: number;
+  };
+};
+
+// Module-level cache for pricing configuration (server-side only)
+let cachedConfig: PricingConfig | null = null;
+let configLoadPromise: Promise<PricingConfig | null> | null = null;
+
+/**
+ * Get pricing configuration, loading from storage if available (server-side only)
+ * Falls back to defaults if not available or on client-side
+ */
+export async function getPricingConfig(): Promise<PricingConfig> {
+  // On client-side, always return defaults
+  if (typeof window !== 'undefined') {
+    return {
+      basePrices: { ...DEFAULT_BASE_PRICES },
+      sizeMultipliers: { ...DEFAULT_SIZE_MULTIPLIERS },
+      poolTypeMultipliers: { ...DEFAULT_POOL_TYPE_MULTIPLIERS },
+      specialConditionFees: { ...DEFAULT_SPECIAL_CONDITION_FEES },
+      equipmentPrices: { ...DEFAULT_EQUIPMENT_PRICES },
+      frequencyMultipliers: { ...DEFAULT_FREQUENCY_MULTIPLIERS },
+    };
+  }
+
+  // Server-side: use cached config if available
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
+  // Load config if not already loading
+  if (!configLoadPromise) {
+    configLoadPromise = (async () => {
+      try {
+        const { getPricingConfig: loadConfig } = await import('../lib/storage');
+        const config = await loadConfig<PricingConfig>();
+        if (config) {
+          cachedConfig = {
+            basePrices: { ...DEFAULT_BASE_PRICES, ...config.basePrices },
+            sizeMultipliers: { ...DEFAULT_SIZE_MULTIPLIERS, ...config.sizeMultipliers },
+            poolTypeMultipliers: { ...DEFAULT_POOL_TYPE_MULTIPLIERS, ...config.poolTypeMultipliers },
+            specialConditionFees: { ...DEFAULT_SPECIAL_CONDITION_FEES, ...config.specialConditionFees },
+            equipmentPrices: { ...DEFAULT_EQUIPMENT_PRICES, ...config.equipmentPrices },
+            frequencyMultipliers: { ...DEFAULT_FREQUENCY_MULTIPLIERS, ...config.frequencyMultipliers },
+          };
+          return cachedConfig;
+        }
+      } catch (error) {
+        console.error('Error loading pricing config:', error);
+      }
+      return null;
+    })();
+  }
+
+  const config = await configLoadPromise;
+  if (config) {
+    return config;
+  }
+
+  // Fallback to defaults
+  return {
+    basePrices: { ...DEFAULT_BASE_PRICES },
+    sizeMultipliers: { ...DEFAULT_SIZE_MULTIPLIERS },
+    poolTypeMultipliers: { ...DEFAULT_POOL_TYPE_MULTIPLIERS },
+    specialConditionFees: { ...DEFAULT_SPECIAL_CONDITION_FEES },
+    equipmentPrices: { ...DEFAULT_EQUIPMENT_PRICES },
+    frequencyMultipliers: { ...DEFAULT_FREQUENCY_MULTIPLIERS },
+  };
+}
+
+/**
+ * Clear the cached pricing configuration (call after updating config)
+ */
+export function clearPricingConfigCache() {
+  cachedConfig = null;
+  configLoadPromise = null;
+}
+
+// For backward compatibility and client-side usage, export defaults as constants
+export const BASE_PRICES = DEFAULT_BASE_PRICES;
+export const SIZE_MULTIPLIERS = DEFAULT_SIZE_MULTIPLIERS;
+export const SPECIAL_CONDITION_FEES = DEFAULT_SPECIAL_CONDITION_FEES;
+export const POOL_TYPE_MULTIPLIERS = DEFAULT_POOL_TYPE_MULTIPLIERS;
+export const EQUIPMENT_PRICES = DEFAULT_EQUIPMENT_PRICES;
+
 type FrequencyVariants = {
   weekly: number | null;
   biWeekly: number | null;
   monthly: number | null;
 };
 
-/**
- * Calculate the service price based on the quote state.
- *
- * - Recurring categories (regular, filter, other):
- *   * main number is WEEKLY service per month
- *   * we also compute “what it would be” for bi-weekly and monthly and list them
- *
- * - One-time categories (green, equipment):
- *   * totals are per-job / one-time
- *   * no frequency variants, no "/month" wording
- */
-export function calculateServicePrice(quoteState: QuoteState): {
+type PricingResult = {
   basePrice: number;
   sizeAdjustment: number;
   poolTypeAdjustment: number;
@@ -80,7 +163,29 @@ export function calculateServicePrice(quoteState: QuoteState): {
   isOneTime: boolean;
   frequencyVariants: FrequencyVariants;
   breakdown: string[];
-} {
+};
+
+/**
+ * Calculate the service price based on the quote state.
+ *
+ * - Recurring categories (regular, filter, other):
+ *   * main number is WEEKLY service per month
+ *   * we also compute "what it would be" for bi-weekly and monthly and list them
+ *
+ * - One-time categories (green, equipment):
+ *   * totals are per-job / one-time
+ *   * no frequency variants, no "/month" wording
+ *
+ * @param quoteState - The quote state containing pool/service information
+ * @param config - Optional pricing configuration (if not provided, uses defaults or cached config)
+ */
+export async function calculateServicePrice(
+  quoteState: QuoteState,
+  config?: PricingConfig
+): Promise<PricingResult> {
+  // Load config if not provided
+  const pricingConfig = config || await getPricingConfig();
+  
   const breakdown: string[] = [];
   let basePrice = 0;
   let sizeAdjustment = 0;
@@ -103,7 +208,7 @@ export function calculateServicePrice(quoteState: QuoteState): {
   // 1. Base price from service category
   // - Recurring: weekly, medium pool baseline (per month)
   // - One-time: base job anchor
-  basePrice = BASE_PRICES[serviceCategory];
+  basePrice = pricingConfig.basePrices[serviceCategory];
   breakdown.push(
     `Base ${serviceCategory} service${
       isRecurringCategory ? " (weekly, medium pool)" : " (base job)"
@@ -112,7 +217,7 @@ export function calculateServicePrice(quoteState: QuoteState): {
 
   // 2. Pool size multiplier (applied to both recurring and one-time anchors)
   if (quoteState.poolSize) {
-    const multiplier = SIZE_MULTIPLIERS[quoteState.poolSize];
+    const multiplier = pricingConfig.sizeMultipliers[quoteState.poolSize];
     const before = basePrice;
     basePrice = basePrice * multiplier;
     sizeAdjustment = basePrice - before;
@@ -128,7 +233,7 @@ export function calculateServicePrice(quoteState: QuoteState): {
 
   // 3. Pool type multiplier
   if (quoteState.poolType) {
-    const multiplier = POOL_TYPE_MULTIPLIERS[quoteState.poolType];
+    const multiplier = pricingConfig.poolTypeMultipliers[quoteState.poolType] || pricingConfig.poolTypeMultipliers.other;
     const before = basePrice;
     basePrice = basePrice * multiplier;
     poolTypeAdjustment = basePrice - before;
@@ -146,44 +251,37 @@ export function calculateServicePrice(quoteState: QuoteState): {
   // but we can leave the aboveGround discount in for one-time as well)
   if (quoteState.specialFlags) {
     if (quoteState.specialFlags.saltwaterPool) {
-      specialConditionFees += SPECIAL_CONDITION_FEES.saltwaterPool;
-      if (SPECIAL_CONDITION_FEES.saltwaterPool !== 0) {
+      const fee = pricingConfig.specialConditionFees.saltwaterPool;
+      specialConditionFees += fee;
+      if (fee !== 0) {
         breakdown.push(
-          `Saltwater pool: +$${SPECIAL_CONDITION_FEES.saltwaterPool.toFixed(
-            2
-          )}/month`
+          `Saltwater pool: +$${fee.toFixed(2)}/month`
         );
       }
     }
     if (quoteState.specialFlags.treesOverPool) {
-      specialConditionFees += SPECIAL_CONDITION_FEES.treesOverPool;
+      const fee = pricingConfig.specialConditionFees.treesOverPool;
+      specialConditionFees += fee;
       if (isRecurringCategory) {
         breakdown.push(
-          `Trees over pool: +$${SPECIAL_CONDITION_FEES.treesOverPool.toFixed(
-            2
-          )}/month`
+          `Trees over pool: +$${fee.toFixed(2)}/month`
         );
       } else {
         breakdown.push(
-          `Trees over pool: +$${SPECIAL_CONDITION_FEES.treesOverPool.toFixed(
-            2
-          )} (extra debris handling)`
+          `Trees over pool: +$${fee.toFixed(2)} (extra debris handling)`
         );
       }
     }
     if (quoteState.specialFlags.aboveGroundPool) {
-      specialConditionFees += SPECIAL_CONDITION_FEES.aboveGroundPool;
+      const fee = pricingConfig.specialConditionFees.aboveGroundPool;
+      specialConditionFees += fee;
       if (isRecurringCategory) {
         breakdown.push(
-          `Above-ground pool: $${SPECIAL_CONDITION_FEES.aboveGroundPool.toFixed(
-            2
-          )}/month`
+          `Above-ground pool: $${fee.toFixed(2)}/month`
         );
       } else {
         breakdown.push(
-          `Above-ground pool: $${SPECIAL_CONDITION_FEES.aboveGroundPool.toFixed(
-            2
-          )} (simpler setup)`
+          `Above-ground pool: $${fee.toFixed(2)} (simpler setup)`
         );
       }
     }
@@ -198,8 +296,8 @@ export function calculateServicePrice(quoteState: QuoteState): {
     const equipmentTotal = quoteState.equipmentSelections.reduce(
       (sum, equipment) => {
         const price =
-          EQUIPMENT_PRICES[equipment] ||
-          EQUIPMENT_PRICES["I'm not sure / something else"];
+          pricingConfig.equipmentPrices[equipment] ||
+          pricingConfig.equipmentPrices["I'm not sure / something else"];
         return sum + price;
       },
       0
@@ -229,8 +327,8 @@ export function calculateServicePrice(quoteState: QuoteState): {
   if (isRecurringCategory) {
     // Interpret monthlyTotal as WEEKLY service per month
     frequencyVariants.weekly = monthlyTotal;
-    frequencyVariants.biWeekly = monthlyTotal * 0.65; // “every other week” estimate
-    frequencyVariants.monthly = monthlyTotal * 0.4; // “once per month” estimate
+    frequencyVariants.biWeekly = monthlyTotal * pricingConfig.frequencyMultipliers.biWeekly;
+    frequencyVariants.monthly = monthlyTotal * pricingConfig.frequencyMultipliers.monthly;
 
     breakdown.push(
       `Standard weekly service: $${monthlyTotal.toFixed(2)}/month`
@@ -257,7 +355,7 @@ export function calculateServicePrice(quoteState: QuoteState): {
   }
 
   return {
-    basePrice: BASE_PRICES[serviceCategory],
+    basePrice: pricingConfig.basePrices[serviceCategory],
     sizeAdjustment,
     poolTypeAdjustment,
     specialConditionFees,
@@ -275,8 +373,8 @@ export function calculateServicePrice(quoteState: QuoteState): {
  * - Recurring (regular/filter/other): "$X.XX/month (weekly service)"
  * - One-time (green/equipment): "$X.XX (one-time estimate)"
  */
-export function getFormattedPrice(quoteState: QuoteState): string {
-  const pricing = calculateServicePrice(quoteState);
+export async function getFormattedPrice(quoteState: QuoteState, config?: PricingConfig): Promise<string> {
+  const pricing = await calculateServicePrice(quoteState, config);
   if (pricing.isOneTime) {
     return `$${pricing.monthlyTotal.toFixed(2)} (one-time estimate)`;
   }
@@ -288,8 +386,8 @@ export function getFormattedPrice(quoteState: QuoteState): string {
  * - For recurring services, monthly * 12
  * - For one-time services, just return the job total
  */
-export function getAnnualPrice(quoteState: QuoteState): number {
-  const pricing = calculateServicePrice(quoteState);
+export async function getAnnualPrice(quoteState: QuoteState, config?: PricingConfig): Promise<number> {
+  const pricing = await calculateServicePrice(quoteState, config);
   if (pricing.isOneTime) {
     return pricing.monthlyTotal;
   }
