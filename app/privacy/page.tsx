@@ -1,6 +1,6 @@
 import DataDeletionForm from './components/DataDeletionForm';
 import DataAccessForm from './components/DataAccessForm';
-import AltHeaderStatic from '../alt-home-2/components/AltHeaderStatic';
+import AltHeaderStatic from '../components/AltHeaderStatic';
 
 export default function PrivacyPolicyPage() {
   return (

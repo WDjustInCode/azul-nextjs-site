@@ -23,6 +23,7 @@
     position: absolute;
     top: 15%;
     left: 8%;
+    margin-right: 8%;
     z-index: 3;
 
     height: 70%;
@@ -50,7 +51,7 @@
 
 .logoImage {
     height: auto;
-    width: clamp(200px, 20vw, 400px);
+    width: 100%;
 }
 
 .kicker {
@@ -89,7 +90,7 @@
 
 .autocompleteWrapper {
     flex: 1;
-    min-width: 280px;
+    min-width: 200px;
     position: relative;
 }
 
@@ -203,13 +204,15 @@
 
 @media (max-width: 992px) {
     .heroContent {
-        padding: 64px 28px;
+        left: 7%;
+        margin-right: 7%;
+        padding: 60px 50px 50px 50px;
     }
 }
 
 @media (max-width: 768px) {
     .logoImage {
-        max-width: clamp(180px, 30vw, 300px);
+        max-width: 100%;
     }
 
     .title {
@@ -233,12 +236,10 @@
 }
 
 @media (max-width: 479px) {
-    .hero {
-        margin-top: 62.23px;
-    }
+    
 
     .logoImage {
-        max-width: clamp(150px, 35vw, 250px);
+        max-width: 100%;
     }
 
     .heroContent {
@@ -247,6 +248,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 50px 30px 30px 30px;
     }
 
     .heroText {
@@ -267,6 +269,11 @@
       
     .subheadline {
         text-align: center;
+    }
+
+    .subtitle {
+        text-align: center;
+        margin: 0 auto;
     }
 }
 

@@ -6,7 +6,7 @@ import { FormEvent, useState, useEffect } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from 'react-places-autocomplete';
-import { isInServiceArea } from '../../utils/serviceArea';
+import { isInServiceArea } from '../utils/serviceArea';
 import AltHeroHeader from './AltHeroHeader';
 import styles from './AltHero.module.css';
 

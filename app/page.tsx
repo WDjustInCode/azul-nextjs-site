@@ -1,25 +1,30 @@
-import Header from './components/Header';
-import Hero from './components/Hero';
-import ServicesSection from './components/ServicesSection';
-import WhatSetsUsApartSection from './components/WhatSetsUsApartSection';
-import ThreeStepSection from './components/ThreeStepSection';
-import ReviewsSection from './components/ReviewsSection';
-import FAQSection from './components/FAQSection';
-import PopularLocationsSection from './components/PopularLocationsSection';
-import Footer from './components/Footer';
+import AltHeader from './components/AltHeader';
+import AltHero from './components/AltHero';
+import AltServicesSection from './components/AltServicesSection';
+import AltWhatSetsUsApartSection from './components/AltWhatSetsUsApartSection';
+import AltThreeStepSection from './components/AltThreeStepSection';
+import AltReviewsSection from './components/AltReviewsSection';
+import AltFAQSection from './components/AltFAQSection';
+import AltPopularLocationsSection from './components/AltPopularLocationsSection';
+import AltFooter from './components/AltFooter';
+
+export const metadata = {
+  title: 'Azul Pools | Home',
+  description: 'Azul Pools - Professional pool services',
+};
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <Hero />
-      <ServicesSection />
-      <WhatSetsUsApartSection />
-      <ThreeStepSection />
-      <ReviewsSection />
-      <FAQSection />
-      <PopularLocationsSection />
-      <Footer />
+      <AltHeader />
+      <AltHero />
+      <AltServicesSection />
+      <AltWhatSetsUsApartSection />
+      <AltThreeStepSection />
+      <AltReviewsSection />
+      <AltFAQSection />
+      <AltPopularLocationsSection />
+      <AltFooter />
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import AltHeaderStatic from '@/app/alt-home-2/components/AltHeaderStatic';
+import AltHeaderStatic from '@/app/components/AltHeaderStatic';
 import styles from './page.module.css';
 
 export default function ContactPage() {
@@ -182,10 +182,10 @@ export default function ContactPage() {
                   hello@azulpoolservices.com
                 </a>
               </div>
-              <div className={styles.contactItem}>
+              {/* <div className={styles.contactItem}>
                 <strong>Address:</strong>
                 <span>1223 Cleveland Ave. Ste 200-305<br />San Antonio, TX 78203</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
