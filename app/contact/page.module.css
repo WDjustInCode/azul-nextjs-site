@@ -1,0 +1,249 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+  padding: 80px 20px 80px;
+}
+
+.content {
+    padding-top: 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: left;
+}
+
+.heading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 600;
+  color: #002147;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  color: #6b717a;
+  line-height: 1.6;
+  max-width: 100%;
+  margin: 0;
+}
+
+.formWrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 48px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #002147;
+}
+
+.required {
+  color: #dc3545;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #0052CC;
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.textarea {
+  min-height: 120px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.submitButton {
+  margin-top: 8px;
+  padding: 18px 24px;
+  border-radius: 12px;
+  background: linear-gradient(20deg, #3c8cff -30%, #75bcff 90%);
+  color: #002147;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Roboto Condensed', sans-serif;
+  align-self: flex-start;
+  box-shadow: 0 12px 24px rgba(60, 140, 255, 0.25);
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(60, 140, 255, 0.35);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.successMessage {
+  padding: 16px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  color: #155724;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.errorMessage {
+  padding: 16px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  color: #721c24;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.securityNote {
+  font-size: 12px;
+  color: #6b717a;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.contactInfo {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  grid-column: 1 / -1;
+}
+
+.contactHeading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #002147;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.contactDetails {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.contactItem {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  color: #002147;
+  line-height: 1.6;
+}
+
+.contactItem strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #0052CC;
+}
+
+.contactLink {
+  color: #0052CC;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contactLink:hover {
+  color: #0042a3;
+  text-decoration: underline;
+}
+
+@media (min-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .formWrapper {
+    position: sticky;
+    top: 100px;
+  }
+
+  .contactDetails {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 16px 60px;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .subtitle {
+    margin: 0 auto;
+  }
+
+  .formWrapper,
+  .contactInfo {
+    padding: 24px;
+  }
+
+  .contactDetails {
+    gap: 16px;
+  }
+
+  .contactHeading {
+    text-align: center;
+  }
+}
+

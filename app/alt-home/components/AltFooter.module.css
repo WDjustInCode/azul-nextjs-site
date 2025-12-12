@@ -1,0 +1,164 @@
+.footer {
+    background: linear-gradient(20deg, #3c8cff -30%, #75bcff 90%);
+    color: #002147;
+    padding: 100px 0 80px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 50px;
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  margin-bottom: 40px;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  height: auto;
+  width: auto;
+  max-width: 200px;
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.contactInfo {
+  font-size: 14px;
+  line-height: 1.8;
+  opacity: 0.9;
+}
+
+.contactInfo p {
+  margin: 0;
+}
+
+.contactInfo a {
+  color: #002147;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.contactInfo a:hover {
+  opacity: 0.7;
+}
+
+.footerLinks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.linkColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linkTitle {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.95;
+}
+
+.linkColumn a {
+  font-size: 14px;
+  color: #002147;
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.linkColumn a:hover {
+  opacity: 1;
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.copyright {
+  font-size: 13px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.legalLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.legalLinks a {
+  font-size: 13px;
+  color: #002147;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.legalLinks a:hover {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .footerLinks {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 60px 0;
+  }
+
+  .footerInner {
+    padding: 0 20px;
+  }
+
+  .footerTop {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .footerLinks {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .legalLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+

@@ -1,9 +1,12 @@
 import DataDeletionForm from './components/DataDeletionForm';
 import DataAccessForm from './components/DataAccessForm';
+import AltHeaderStatic from '../alt-home-2/components/AltHeaderStatic';
 
 export default function PrivacyPolicyPage() {
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+    <>
+      <AltHeaderStatic />
+      <div style={{ maxWidth: '800px', margin: '100px auto', padding: '2rem' }}>
       <h1>Privacy Policy</h1>
       <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
 
@@ -120,6 +123,7 @@ export default function PrivacyPolicyPage() {
         </p>
       </section>
     </div>
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-export default function PopularLocationsSection() {
+export default function AltPopularLocationsSection() {
   return (
     <section className="azul-locations-section">
       <style>{`
@@ -158,24 +158,47 @@ export default function PopularLocationsSection() {
         }
 
         .azul-btn-primary {
-          background: #0052cc;
-          color: #ffffff;
-          border: none;
+            font-family: 'Roboto Condensed', sans-serif;
+            background: linear-gradient(20deg, #3c8cff -30%, #75bcff 90%);
+            color: #002147;
+            padding: 18px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: fit-content;
+            box-shadow: 0 12px 24px rgba(60, 140, 255, 0.25);
+            white-space: nowrap;
         }
 
         .azul-btn-primary:hover {
-          background: #003f9a;
+          background: #002147;
+          color: #66B2FF;
           transform: translateY(-1px);
         }
 
         .azul-btn-outline {
-          background: #ffffff;
-          color: #0052cc;
-          border: 1px solid #0052cc;
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #ffffff;
+            color: #66B2FF;
+            padding: 18px 24px;
+            border-radius: 12px;
+            border: 1px solid #66B2FF;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: fit-content;
+            box-shadow: 0 6px 12px rgba(60, 140, 255, 0.25);
+            white-space: nowrap;
         }
 
         .azul-btn-outline:hover {
-          background: #0052cc;
+          background: #66B2FF;
           color: #ffffff;
         }
 
@@ -282,10 +305,6 @@ export default function PopularLocationsSection() {
         </div>
 
         <h2 className="azul-locations-title">Popular locations</h2>
-
-        {/* <div className="azul-location-tabs">
-          <span className="azul-location-tab active">San Antonio</span>
-        </div> */}
 
         <div className="azul-locations-grid">
           <div className="azul-location-item">San Antonio, TX</div>

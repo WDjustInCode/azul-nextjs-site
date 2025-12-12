@@ -1,4 +1,4 @@
-export default function WhatSetsUsApartSection() {
+export default function AltWhatSetsUsApartSection() {
   return (
     <section className="azul-section">
       <style>{`
@@ -16,7 +16,7 @@ export default function WhatSetsUsApartSection() {
           font-family: 'Roboto Condensed', sans-serif;
           font-size: clamp(3.25rem, 5.85vw, 4.55rem);
           font-weight: 400;
-          text-align: left;
+          text-align: center;
           margin-top: 0px;
           margin-bottom: 50px;
           color: #002147;
@@ -26,22 +26,35 @@ export default function WhatSetsUsApartSection() {
         .azul-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-rows: repeat(2, minmax(0, 1fr));
           grid-gap: 25px;
+          aspect-ratio: 3/2;
+          min-height: 400px;
         }
 
         .azul-card {
           position: relative;
-          border-radius: 16px;
           overflow: hidden;
         }
 
-        .azul-card--wide {
-          grid-column: 1 / -1;
-          height: 420px;
+        .azul-card--shape-1 {
+          border-radius: 50px 16px 16px 16px;
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 15%);
         }
 
-        .azul-card--standard {
-          height: 320px;
+        .azul-card--shape-2 {
+          border-radius: 16px 50px 16px 16px;
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 85% 100%, 0 100%);
+        }
+
+        .azul-card--shape-3 {
+          border-radius: 16px 16px 16px 50px;
+          clip-path: polygon(0 0, 85% 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .azul-card--shape-4 {
+          border-radius: 16px 16px 50px 16px;
+          clip-path: polygon(0 0, 100% 0, 100% 85%, 100% 100%, 0 100%);
         }
 
         .azul-card img {
@@ -73,7 +86,7 @@ export default function WhatSetsUsApartSection() {
           top: 20px;
           left: 20px;
           color: #ffffff;
-          max-width: 70%;
+          max-width: 100%;
           z-index: 2;
         }
 
@@ -99,7 +112,31 @@ export default function WhatSetsUsApartSection() {
           font-weight: 300;
           line-height: 1.4;
           letter-spacing: 0.3px;
-          max-width: 50%;
+          max-width: 60%;
+        }
+
+        .azul-card ul {
+          font-size: 15px;
+          font-weight: 300;
+          line-height: 1.6;
+          letter-spacing: 0.3px;
+          max-width: 90%;
+          margin: 0;
+          padding-left: 20px;
+          list-style: none;
+        }
+
+        .azul-card ul li {
+          margin-bottom: 6px;
+          position: relative;
+        }
+
+        .azul-card ul li::before {
+          content: "•";
+          position: absolute;
+          left: -18px;
+          color: #ffffff;
+          font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -113,11 +150,18 @@ export default function WhatSetsUsApartSection() {
 
             .azul-grid {
                 grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, auto);
+                aspect-ratio: auto;
+                min-height: auto;
             }
 
-            .azul-card--wide,
-            .azul-card--standard {
-                height: 300px;
+            .azul-card--shape-1,
+            .azul-card--shape-2,
+            .azul-card--shape-3,
+            .azul-card--shape-4 {
+                height: 200px;
+                border-radius: 16px;
+                clip-path: none;
             }
 
             .azul-card-content {
@@ -146,30 +190,45 @@ export default function WhatSetsUsApartSection() {
 
       <h2 className="azul-title">Quality you can depend on</h2>
 
-      <div className="azul-grid">
-        <div className="azul-card azul-card--wide">
+      <div className="azul-grid" id="commercial">
+        <div className="azul-card azul-card--shape-1">
           <img src="https://img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/justInception_generate_a_cinematic_image_of_a_.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:2558,m" alt="Pool service" />
+          <div className="azul-card-content">
+            <h3>Our Commitment to You</h3>
+            <p>At Azul Pool Services, we are committed to:</p>
+            <ul>
+              <li>Providing consistent, high-quality pool maintenance and repair services.</li>
+              <li>Maintaining clear, proactive communication before and after every visit.</li>
+              <li>Treating your property with the highest level of care and professionalism.</li>
+              <li>Offering honest recommendations that prioritize your safety, comfort, and budget.</li>
+              <li>Standing behind our work and making things right if something falls short of expectations.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="azul-card azul-card--shape-2">
+          <img src="/dog.jpg" alt="Safe water" />
+          <div className="azul-card-content">
+            <h3>Water Your Family <br /> Will Love</h3>
+            <p>We keep your pool balanced and swim-ready.</p>
+          </div>
+        </div>
+
+        <div className="azul-card azul-card--shape-3">
+          <img src="/girl.jpg" alt="Guarantee" />
+          <div className="azul-card-content">
+            <h3 className="h3-desktop">If Anything Goes Wrong, <br /> We've Got You</h3>
+            <h3 className="h3-mobile">If Anything Goes Wrong, We've Got You</h3>
+            <p>Our work is guaranteed and stress-free.</p>
+          </div>
+        </div>
+
+        <div className="azul-card azul-card--shape-4">
+          <img src="/AdobeStock_223936793_Preview.jpeg" alt="Our Commitment" />
           <div className="azul-card-content">
             <h3 className="h3-desktop">We Don't Just Clean Your Pool<br />We Give You Peace of Mind</h3>
             <h3 className="h3-mobile">We Don't Just Clean Your Pool, We Give You Peace of Mind</h3>
             <p>Every visit includes a photo and update, so you always know what got done.</p>
-          </div>
-        </div>
-
-        <div className="azul-card azul-card--standard">
-          <img src="//img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Untitled-13.jpg/:/rs=w:2000,cg:true" alt="Safe water" />
-          <div className="azul-card-content">
-            <h3>Water Your Family <br /> Will Love</h3>
-            <p>Clean, comfortable water without irritation. We keep your pool balanced and swim-ready.</p>
-          </div>
-        </div>
-
-        <div className="azul-card azul-card--standard">
-          <img src="//img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/Untitled-10.jpg/:/rs=w:2000,cg:true" alt="Guarantee" />
-          <div className="azul-card-content">
-            <h3 className="h3-desktop">If Anything Goes Wrong, <br /> We've Got You</h3>
-            <h3 className="h3-mobile">If Anything Goes Wrong, We've Got You</h3>
-            <p>If your pool turns cloudy or green, we fix it for free. No stress, no hassle.</p>
           </div>
         </div>
       </div>

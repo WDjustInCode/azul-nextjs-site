@@ -1,21 +1,24 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import styles from './ServicesSection.module.css';
+import styles from './AltServicesSection.module.css';
 
-export default function ServicesSection() {
+export default function AltServicesSection() {
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
   const video3Ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Ensure first frame loads in Safari
     const loadFirstFrame = (video: HTMLVideoElement | null) => {
       if (video) {
         video.load();
-        video.addEventListener('loadedmetadata', () => {
-          video.currentTime = 0;
-        }, { once: true });
+        video.addEventListener(
+          'loadedmetadata',
+          () => {
+            video.currentTime = 0;
+          },
+          { once: true },
+        );
       }
     };
 
@@ -38,12 +41,12 @@ export default function ServicesSection() {
   };
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} id="services">
       <h2 className={styles.title}>Service you can count on</h2>
 
       <div className={styles.grid}>
         <div className={styles.card}>
-          <div 
+          <div
             className={styles.imageWrapper}
             onMouseEnter={() => handleMouseEnter(video1Ref)}
             onMouseLeave={() => handleMouseLeave(video1Ref)}
@@ -63,7 +66,7 @@ export default function ServicesSection() {
         </div>
 
         <div className={styles.card}>
-          <div 
+          <div
             className={styles.imageWrapper}
             onMouseEnter={() => handleMouseEnter(video2Ref)}
             onMouseLeave={() => handleMouseLeave(video2Ref)}
@@ -83,7 +86,7 @@ export default function ServicesSection() {
         </div>
 
         <div className={styles.card}>
-          <div 
+          <div
             className={styles.imageWrapper}
             onMouseEnter={() => handleMouseEnter(video3Ref)}
             onMouseLeave={() => handleMouseLeave(video3Ref)}

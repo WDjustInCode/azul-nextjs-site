@@ -1,14 +1,16 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState, useEffect } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from 'react-places-autocomplete';
-import { isInServiceArea } from '../utils/serviceArea';
-import styles from './Hero.module.css';
+import { isInServiceArea } from '../../utils/serviceArea';
+import AltHeroHeader from './AltHeroHeader';
+import styles from './AltHero.module.css';
 
-export default function Hero() {
+export default function AltHero() {
   const router = useRouter();
   const [address, setAddress] = useState('');
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -116,12 +118,24 @@ export default function Hero() {
 
   return (
     <section className={styles.hero}>
+      <AltHeroHeader />
       <div className={styles.heroContent}>
         <div className={styles.heroText}>
-          <h1 className={`${styles.headline} ${styles.headlineDesktop}`}>We Don't Just Maintain Pools, <br />We Maintain Trust</h1>
-          <h1 className={`${styles.headline} ${styles.headlineMobile}`}>We Don't Just Maintain Pools, We Maintain Trust</h1>
-          <p className={styles.subheadline}>
-            Reliable, friendly service that keeps your water clean, clear, and worry-free.
+          <div className={styles.logoWrap}>
+            <Image
+              src="/combination_mark_dark.svg"
+              alt="Azul Pool Services"
+              width={377}
+              height={174}
+              className={styles.logoImage}
+              priority
+            />
+          </div>
+          <p className={styles.subtitle}>
+            We don't just maintain pools — we maintain trust.
+          </p>
+          <p style={{ fontSize: 13, color: '#5a6574', opacity: 0.85 }}>
+            Request a quote in just a couple minutes.
           </p>
           <form onSubmit={handleSubmit} className={styles.formContainer}>
             <div className={styles.autocompleteWrapper}>
@@ -175,18 +189,19 @@ export default function Hero() {
                 />
               )}
             </div>
-            <button type="submit" className={styles.ctaButton}>See My Price</button>
+            <div className={styles.buttonContainer}>
+              <button type="submit" className={styles.primaryButton}>Get a Quote</button>
+              <button
+                onClick={handleSkipAddress}
+                className={styles.skipLink}
+                type="button"
+              >
+                Can't find my address
+              </button>
+            </div>
           </form>
-          <button
-            onClick={handleSkipAddress}
-            className={styles.skipLink}
-            type="button"
-          >
-            Can't find my address
-          </button>
         </div>
       </div>
     </section>
   );
 }
-

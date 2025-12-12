@@ -1,6 +1,6 @@
 'use client';
 
-export default function FAQSection() {
+export default function AltFAQSection() {
   const toggleFAQ = (button: HTMLButtonElement) => {
     const answer = button.nextElementSibling as HTMLElement;
     const isExpanded = button.classList.contains('collapsed');

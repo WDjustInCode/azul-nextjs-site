@@ -1,6 +1,6 @@
 'use client';
 
-export default function FAQSection() {
+export default function AltFAQSection() {
   const toggleFAQ = (button: HTMLButtonElement) => {
     const answer = button.nextElementSibling as HTMLElement;
     const isExpanded = button.classList.contains('collapsed');
@@ -212,7 +212,7 @@ export default function FAQSection() {
             </button>
             <div className="azul-faq-answer">
               <div className="azul-faq-answer-content">
-                <p>It depends on pool size, equipment, and condition, but most homeowners pay <strong>$120–$180/mo</strong> for standard weekly maintenance. Repairs and chemicals beyond the basics are usually extra.</p>
+                <p>It depends on pool size, equipment and condition, please reach out for a quote.</p>
               </div>
             </div>
           </div>
@@ -228,9 +228,8 @@ export default function FAQSection() {
                   <li>Chemical imbalance</li>
                   <li>Insufficient circulation or filtration</li>
                   <li>High debris load</li>
-                  <li>Algae growth</li>
+                  <li>Bather load</li>
                 </ul>
-                <p>Even well-maintained pools can turn quickly after heavy rain or heat.</p>
               </div>
             </div>
           </div>

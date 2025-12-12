@@ -1,36 +1,18 @@
 .header {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(10px);
   z-index: 1000;
-  padding: 13.25px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 40px 0;
 }
 
 .headerInner {
-  max-width: 1300px;
   margin: 0 auto;
-  padding: 0 35px;
+  padding: 0 130px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-}
-
-.logoImage {
-  display: block;
-  height: 53px;
-  width: auto;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  justify-content: flex-end;
 }
 
 .hamburger {
@@ -57,38 +39,35 @@
 }
 
 .nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+    width: 60%;
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(15px, 1vw, 32px);
+    font-weight: 400;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10%;
+    color: #ffffff;
 }
 
-.navLink {
-  font-family: 'Poppins', sans-serif;
-  font-size: 15px;
-  color: #002147;
+.getInTouchButton {
+  padding: 10px 20px;
+  font-family: 'Roboto Condensed', sans-serif;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
-.navLink:hover {
-  color: #0052CC;
-}
-
-.dropdown {
-  font-size: 10px;
-  opacity: 0.7;
+.getInTouchButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.10);
 }
 
 .phone {
-  font-family: 'Poppins', sans-serif;
-  font-size: 15px;
-  color: #002147;
+  color: #ffffff;
   text-decoration: none;
-  font-weight: 500;
+  align-items: center;
   transition: color 0.2s ease;
 }
 
@@ -96,32 +75,17 @@
   color: #0052CC;
 }
 
-.ctaButton {
-  font-family: 'Roboto Condensed', sans-serif;
-  background: #0052CC;
-  color: #ffffff;
-  padding: 12px 24px;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.ctaButton:hover {
-  background: #003d99;
-  transform: translateY(-1px);
+.dropdown {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.7em;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
 }
 
 @media (max-width: 479px) {
   .header {
     padding: 10px 0;
-  }
-
-  .logoImage {
-    width: 90px !important;
-    height: auto !important;
   }
 
   .hamburger {
@@ -173,18 +137,12 @@
     transform: translateX(0);
   }
 
-  .navLink,
+  .getInTouchButton,
   .phone {
     font-size: 16px;
     width: 100%;
-    padding: 12px 0;
-  }
-
-  .ctaButton {
-    width: 100%;
+    padding: 18px 24px;
     text-align: center;
-    padding: 12px 24px;
-    font-size: 14px;
   }
 
   .hamburger[aria-expanded="true"] .hamburgerLine:nth-child(1) {
@@ -215,18 +173,13 @@
     gap: 12px;
   }
 
-  .navLink,
+  .getInTouchButton,
   .phone {
     font-size: 13px;
   }
 
   .phone {
     display: none;
-  }
-
-  .ctaButton {
-    padding: 10px 18px;
-    font-size: 13px;
   }
 }
 
