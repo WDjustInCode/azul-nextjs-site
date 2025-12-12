@@ -6,7 +6,7 @@
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(10px);
   z-index: 1000;
-  padding: 19.75px 0;
+  padding: 13.25px 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -27,7 +27,7 @@
 
 .logoImage {
   display: block;
-  height: 40px;
+  height: 53px;
   width: auto;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -116,7 +116,7 @@
 
 @media (max-width: 479px) {
   .header {
-    padding: 15px 0;
+    padding: 10px 0;
   }
 
   .logoImage {

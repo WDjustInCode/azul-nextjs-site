@@ -9,11 +9,12 @@ import AltPopularLocationsSection from './components/AltPopularLocationsSection'
 import AltFooter from './components/AltFooter';
 
 export const metadata = {
-  title: 'Azul Pools | Home',
-  description: 'Azul Pools - Professional pool services',
+  title: 'Azul Pools | Alternate Home',
+  description:
+    'Alternate home page matching the primary layout so you can customize independently.',
 };
 
-export default function Home() {
+export default function AlternateHome() {
   return (
     <>
       <AltHeader />
@@ -28,3 +29,4 @@ export default function Home() {
     </>
   );
 }
+

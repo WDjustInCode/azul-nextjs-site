@@ -1,13 +1,13 @@
 'use client';
 
-export default function ReviewsSection() {
+export default function AltReviewsSection() {
   return (
-    <section className="azul-reviews-section">
+    <section className="azul-reviews-section" id="reviews">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto+Condensed:wght@400;700&display=swap');
 
         .azul-reviews-section {
-          background: #0052cc;
+          background: linear-gradient(20deg, #3c8cff -30%, #75bcff 90%);
           padding: 75px 25px 75px;
           font-family: "Poppins", sans-serif;
         }
@@ -15,7 +15,7 @@ export default function ReviewsSection() {
         .azul-reviews-inner {
           max-width: 1150px;
           margin: 0 auto;
-          color: #ffffff;
+          color: #002147;
           padding: 0 25px;
         }
 
@@ -56,11 +56,12 @@ export default function ReviewsSection() {
         }
 
         .azul-reviews-avatar {
+          color: #ffffff;
           width: 34px;
           height: 34px;
           border-radius: 999px;
           border: 2px solid #ffffff;
-          background: #003f9a;
+          background: #002147;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -131,7 +132,7 @@ export default function ReviewsSection() {
         }
 
         .azul-review-stars {
-          color: #ffffff;
+          color: #ffd700;
           font-size: 1.05rem;
           margin-bottom: 10px;
           letter-spacing: 1.5px;
@@ -210,7 +211,7 @@ export default function ReviewsSection() {
 
       <div className="azul-reviews-inner">
         <div className="azul-reviews-header-row">
-          <h2 className="azul-reviews-heading">Your Neighbors Will Say It Best</h2>
+          <h2 className="azul-reviews-heading">Your neighbors will say it best</h2>
 
           <div className="azul-reviews-meta">
             <div className="azul-reviews-avatars">

@@ -1,6 +1,6 @@
 'use client';
 
-export default function FAQSection() {
+export default function AltFAQSection() {
   const toggleFAQ = (button: HTMLButtonElement) => {
     const answer = button.nextElementSibling as HTMLElement;
     const isExpanded = button.classList.contains('collapsed');
@@ -172,7 +172,7 @@ export default function FAQSection() {
       <div className="azul-faq-inner">
         <div className="azul-faq-container">
           <div className="azul-faq-header">
-            <h2 className="azul-faq-heading">Frequent Questions</h2>
+            <h2 className="azul-faq-heading">Frequent questions</h2>
           </div>
 
           <div className="azul-faq-list">

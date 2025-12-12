@@ -349,3 +349,112 @@ export async function sendQuoteEmail({
   }
 }
 
+interface SendContactFormParams {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
+/**
+ * Send contact form submission email
+ */
+export async function sendContactForm({
+  name,
+  email,
+  phone,
+  message,
+}: SendContactFormParams): Promise<boolean> {
+  // Use test email for testing, production email for production
+  // Can be overridden with CONTACT_EMAIL environment variable
+  const recipientEmail = process.env.CONTACT_EMAIL || 
+    (process.env.NODE_ENV === 'production' 
+      ? 'hello@azulpoolservices.com' 
+      : 'justblocker@icloud.com');
+
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[EMAIL] RESEND_API_KEY not set. Contact form submission:');
+    console.warn('[EMAIL] Name:', name);
+    console.warn('[EMAIL] Email:', email);
+    console.warn('[EMAIL] Phone:', phone || 'N/A');
+    console.warn('[EMAIL] Message:', message);
+    return false;
+  }
+
+  try {
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@yourdomain.com';
+    const companyName = process.env.COMPANY_NAME || 'Azul Pool Services';
+
+    const { error } = await resend.emails.send({
+      from: fromEmail,
+      to: recipientEmail,
+      replyTo: email,
+      subject: `New Contact Form Submission from ${name}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              <h1 style="color: #0052CC; margin-top: 0;">New Contact Form Submission</h1>
+              <p>You have received a new message through the contact form on your website.</p>
+            </div>
+            
+            <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h2 style="color: #002147; margin-top: 0; font-size: 18px;">Contact Information</h2>
+              <p style="margin: 10px 0;"><strong>Name:</strong> ${name}</p>
+              <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #0052CC;">${email}</a></p>
+              ${phone ? `<p style="margin: 10px 0;"><strong>Phone:</strong> <a href="tel:${phone}" style="color: #0052CC;">${phone}</a></p>` : ''}
+            </div>
+            
+            <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h2 style="color: #002147; margin-top: 0; font-size: 18px;">Message</h2>
+              <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999;">
+              <p style="margin: 5px 0;">
+                This email was sent from the contact form on ${companyName} website.
+              </p>
+              <p style="margin: 5px 0;">
+                You can reply directly to this email to respond to ${name}.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
+      text: `
+New Contact Form Submission
+
+You have received a new message through the contact form on your website.
+
+Contact Information:
+Name: ${name}
+Email: ${email}
+${phone ? `Phone: ${phone}` : ''}
+
+Message:
+${message}
+
+---
+This email was sent from the contact form on ${companyName} website.
+You can reply directly to this email to respond to ${name}.
+      `,
+    });
+
+    if (error) {
+      console.error('[EMAIL] Error sending contact form:', error);
+      return false;
+    }
+
+    console.log('[EMAIL] Contact form submission sent successfully to', recipientEmail);
+    return true;
+  } catch (error) {
+    console.error('[EMAIL] Exception sending contact form:', error);
+    return false;
+  }
+}
+

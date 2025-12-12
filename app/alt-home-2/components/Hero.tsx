@@ -5,7 +5,7 @@ import { FormEvent, useState, useEffect } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from 'react-places-autocomplete';
-import { isInServiceArea } from '../utils/serviceArea';
+import { isInServiceArea } from '../../utils/serviceArea';
 import styles from './Hero.module.css';
 
 export default function Hero() {
@@ -184,12 +184,6 @@ export default function Hero() {
           >
             Can't find my address
           </button>
-          <div className={styles.reviews}>
-            <div className={styles.stars}>★★★★★</div>
-            <span className={styles.reviewText}>
-              Rated 4.9/5 by 2,200+ customer reviews
-            </span>
-          </div>
         </div>
       </div>
     </section>

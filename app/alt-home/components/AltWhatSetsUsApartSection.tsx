@@ -1,4 +1,4 @@
-export default function WhatSetsUsApartSection() {
+export default function AltWhatSetsUsApartSection() {
   return (
     <section className="azul-section">
       <style>{`
@@ -144,9 +144,9 @@ export default function WhatSetsUsApartSection() {
         }
       `}</style>
 
-      <h2 className="azul-title">Quality You Can Depend On</h2>
+      <h2 className="azul-title">Quality you can depend on</h2>
 
-      <div className="azul-grid">
+      <div className="azul-grid" id="commercial">
         <div className="azul-card azul-card--wide">
           <img src="https://img1.wsimg.com/isteam/ip/6f7e54c6-a72a-4a50-a1f0-7c28226198af/justInception_generate_a_cinematic_image_of_a_.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:2558,m" alt="Pool service" />
           <div className="azul-card-content">
