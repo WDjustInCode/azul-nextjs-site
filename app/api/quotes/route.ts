@@ -3,6 +3,7 @@ import { QuoteState } from '../../quote/components/types';
 import { calculateServicePrice } from '../../utils/pricing';
 import { logAuditEvent } from '../../lib/compliance';
 import { uploadQuote } from '../../lib/storage';
+import { sendQuoteNotification } from '../../lib/email';
 
 // Simple rate limiting store (in production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -115,6 +116,11 @@ export async function POST(request: NextRequest) {
 
     // Upload quote data to Supabase Storage (private bucket)
     await uploadQuote(filename, quoteWithPricing);
+
+    // Send notification email to internal team (fire and forget)
+    sendQuoteNotification({
+      quoteData: quoteWithPricing,
+    }).catch(err => console.error('[EMAIL] Failed to send quote notification:', err));
 
     // Log data collection for compliance audit trail (fire and forget)
     const forwarded = request.headers.get('x-forwarded-for');
