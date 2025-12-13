@@ -64,7 +64,7 @@ declare namespace google {
     }
 
     interface GeocoderGeometry {
-      location: LatLng;
+      location: LatLng | LatLngLiteral;
       location_type: GeocoderLocationType;
       viewport: LatLngBounds;
       bounds?: LatLngBounds;

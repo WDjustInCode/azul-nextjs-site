@@ -89,12 +89,26 @@ export async function geocodeByPlaceId(placeId: string): Promise<google.maps.Geo
   });
 }
 
+function isLatLngObject(location: google.maps.LatLng | google.maps.LatLngLiteral): location is google.maps.LatLng {
+  return typeof (location as any).lat === 'function';
+}
+
+function getLatLngFromLocation(location: google.maps.LatLng | google.maps.LatLngLiteral): { lat: number; lng: number } {
+  if (isLatLngObject(location)) {
+    return {
+      lat: location.lat(),
+      lng: location.lng(),
+    };
+  } else {
+    return {
+      lat: location.lat,
+      lng: location.lng,
+    };
+  }
+}
+
 export async function getLatLng(result: google.maps.GeocoderResult): Promise<{ lat: number; lng: number }> {
-  const location = result.geometry.location;
-  return {
-    lat: typeof location.lat === 'function' ? location.lat() : location.lat,
-    lng: typeof location.lng === 'function' ? location.lng() : location.lng,
-  };
+  return getLatLngFromLocation(result.geometry.location);
 }
 
 export default function PlacesAutocomplete({
@@ -163,14 +177,8 @@ export default function PlacesAutocomplete({
         }
 
         if (searchOptions.location) {
-          request.location = new google.maps.LatLng(
-            typeof searchOptions.location.lat === 'function' 
-              ? searchOptions.location.lat() 
-              : searchOptions.location.lat,
-            typeof searchOptions.location.lng === 'function' 
-              ? searchOptions.location.lng() 
-              : searchOptions.location.lng
-          );
+          const { lat, lng } = getLatLngFromLocation(searchOptions.location);
+          request.location = new google.maps.LatLng(lat, lng);
           if (searchOptions.radius) {
             request.radius = searchOptions.radius;
           }
