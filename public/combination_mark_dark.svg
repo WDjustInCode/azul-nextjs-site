@@ -42,13 +42,13 @@
         <polygon points="426.64 0 426.64 0 140.07 108.61 140.07 108.61 140.19 119.13 426.67 12.37 726.01 123.94 739.21 118.94 739.21 118.94 426.64 0" style="fill: #0052cc; fill-rule: evenodd;"/>
       </g>
       <g>
-        <g shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="filter: url(#drop-shadow-1);">
+        <g shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
           <path d="M258.55,176.92h-57l-9.14,26.98h-38.95l55.26-152.74h43.08l55.26,152.74h-39.38l-9.14-26.98ZM248.98,148.2l-18.93-55.92-18.71,55.92h37.64Z" style="fill: #002147;"/>
           <path d="M358.63,173.22h52.65v30.68h-94.21v-29.59l50.48-61.14h-50.04v-30.68h92.69v29.59l-51.57,61.14Z" style="fill: #002147;"/>
           <path d="M551.62,82.49v121.41h-37.21v-16.54c-3.77,5.37-8.89,9.68-15.34,12.95-6.46,3.26-13.6,4.9-21.43,4.9-9.28,0-17.48-2.07-24.59-6.2-7.11-4.13-12.62-10.12-16.54-17.95-3.92-7.83-5.87-17.04-5.87-27.63v-70.93h36.99v65.93c0,8.13,2.1,14.43,6.31,18.93,4.21,4.5,9.86,6.74,16.97,6.74s12.98-2.25,17.19-6.74c4.21-4.49,6.31-10.8,6.31-18.93v-65.93h37.21Z" style="fill: #002147;"/>
           <path d="M615.59,42.89v161.01h-37.21V42.89h37.21Z" style="fill: #002147;"/>
         </g>
-        <polyline points="472.48 75.47 475.2 82 514.03 64.99 504.18 49.5" style="fill: #002147;" shape-rendering="geometricPrecision" filter="url(#drop-shadow-2)"/>
+        <polyline points="472.48 75.47 475.2 82 514.03 64.99 504.18 49.5" style="fill: #002147;" shape-rendering="geometricPrecision"/>
       </g>
     </g>
   </g>
