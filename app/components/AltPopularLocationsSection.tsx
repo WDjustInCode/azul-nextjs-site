@@ -267,7 +267,7 @@ export default function AltPopularLocationsSection() {
               <p className="azul-card-hours">Sun – Sat · 8:00 AM – 5:00 PM</p>
             </div>
             <div className="azul-card-cta">
-              <a className="azul-btn-primary" href="tel:1210-414-4771">(888) 768-7554</a>
+              <a className="azul-btn-primary" href="tel:12104144771">(210) 414-4771</a>
             </div>
           </div>
 
@@ -279,11 +279,11 @@ export default function AltPopularLocationsSection() {
               </div>
               <div className="azul-card-title">Fast, free online pricing.</div>
               <p className="azul-card-text">
-                Answer a few questions and see your estimated price in minutes.
+                Make a request in minutes, get a quote back in less than 2 hours.
               </p>
             </div>
             <div className="azul-card-cta">
-              <a className="azul-btn-outline" href="#get-a-quote">See My Price</a>
+              <a className="azul-btn-outline" href="/quote">See My Price</a>
             </div>
           </div>
 
