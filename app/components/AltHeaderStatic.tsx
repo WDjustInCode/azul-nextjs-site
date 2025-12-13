@@ -44,7 +44,7 @@ export default function AltHeaderStatic() {
           <Link href="#services" className={styles.navLink} onClick={closeMenu}>
             Pool Services <span className={styles.dropdown}>▼</span>
           </Link>
-          <Link href="#commercial" className={styles.navLink} onClick={closeMenu}>
+          <Link href="/quote?step=commercial-form" className={styles.navLink} onClick={closeMenu}>
             Commercial
           </Link>
           <a href="tel:18887687554" className={styles.phone} onClick={closeMenu}>

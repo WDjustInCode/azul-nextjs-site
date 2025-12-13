@@ -30,7 +30,7 @@ export default function AltFooter() {
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>QUICK LINKS</h3>
               <Link href="#quote">Get a Quote</Link>
-              <Link href="#commercial">Commercial Pool Service</Link>
+              <Link href="/quote?step=commercial-form">Commercial Pool Service</Link>
               <Link href="#services">Pool Services</Link>
               <Link href="#resources">Resources</Link>
               <Link href="#reviews">Reviews</Link>
