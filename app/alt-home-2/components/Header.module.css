@@ -52,8 +52,8 @@
   border-radius: 2px;
 }
 
-.hamburger:hover .hamburgerLine {
-  background-color: #0052CC;
+.hamburgerLine:hover {
+  background-color: #75bcff;
 }
 
 .nav {

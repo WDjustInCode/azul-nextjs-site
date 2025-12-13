@@ -172,7 +172,7 @@ export default function ContactPage() {
             <div className={styles.contactDetails}>
               <div className={styles.contactItem}>
                 <strong>Phone:</strong>
-                <a href="tel:18887687554" className={styles.contactLink}>
+                <a href="tel:1210-414-4771" className={styles.contactLink}>
                   (888) 768-7554
                 </a>
               </div>

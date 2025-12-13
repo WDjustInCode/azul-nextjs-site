@@ -23,7 +23,7 @@ export default function Footer() {
                 <a href="mailto:hello@azulpools.com">hello@azulpools.com</a>
               </p>
               <p>
-                <a href="tel:18887687554">(888) 768-7554</a>
+                <a href="tel:1210-414-4771">(888) 768-7554</a>
               </p>
             </div>
           </div>
@@ -32,7 +32,7 @@ export default function Footer() {
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>QUICK LINKS</h3>
               <Link href="#quote">Get a Quote</Link>
-              <Link href="/quote?step=commercial-form">Commercial Pool Service</Link>
+              <Link href="/quote?step=commercial-form&from=footer">Commercial Pool Service</Link>
               <Link href="#services">Pool Services</Link>
               <Link href="#resources">Resources</Link>
               <Link href="#reviews">Reviews</Link>

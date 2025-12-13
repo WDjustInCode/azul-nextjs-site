@@ -92,6 +92,13 @@
   opacity: 1;
 }
 
+.linkColumn span {
+  font-size: 14px;
+  color: #002147;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
 .footerBottom {
   display: flex;
   justify-content: space-between;

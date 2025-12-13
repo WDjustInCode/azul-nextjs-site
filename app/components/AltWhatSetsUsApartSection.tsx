@@ -120,7 +120,7 @@ export default function AltWhatSetsUsApartSection() {
           font-weight: 300;
           line-height: 1.6;
           letter-spacing: 0.3px;
-          max-width: 90%;
+          max-width: 100%;
           margin: 0;
           padding-left: 20px;
           list-style: none;
@@ -137,6 +137,43 @@ export default function AltWhatSetsUsApartSection() {
           left: -18px;
           color: #ffffff;
           font-weight: 500;
+        }
+
+        @media (max-width: 992px) {
+            .azul-card h3 {
+                font-weight: 500;
+                font-size: 18px;
+                line-height: 1.3;
+                margin-bottom: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .azul-card h3.h3-desktop {
+                display: block;
+            }
+
+            .azul-card h3.h3-mobile {
+                display: none;
+            }
+
+            .azul-card p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 1.3;
+                letter-spacing: 0.3px;
+                max-width: 100%;
+            }
+
+            .azul-card ul {
+                font-size: 13px;
+                font-weight: 300;
+                line-height: 1.3;
+                letter-spacing: 0.3px;
+                max-width: 100%;
+                margin: 0;
+                padding-left: 20px;
+                list-style: none;
+            }
         }
 
         @media (max-width: 768px) {
@@ -165,7 +202,7 @@ export default function AltWhatSetsUsApartSection() {
             }
 
             .azul-card-content {
-                max-width: 70%;
+                max-width: 100%;
             }
         }
 

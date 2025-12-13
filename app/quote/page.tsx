@@ -29,6 +29,7 @@ function QuoteWizardContent() {
   const searchParams = useSearchParams();
   const addressFromUrl = searchParams.get("address") || undefined;
   const stepFromUrl = searchParams.get("step") as StepId | null;
+  const fromParam = searchParams.get("from");
 
   const [state, setState] = useState<QuoteState>({
     address: addressFromUrl,
@@ -555,13 +556,17 @@ function QuoteWizardContent() {
       // -------- COMMERCIAL FORM --------
 
       case "commercial-form":
+        // If user came from footer or header, back button should go to home page
+        const commercialFormBack = (fromParam === "footer" || fromParam === "header")
+          ? () => router.push("/")
+          : goBack;
         return (
           <CommercialForm
             onSubmit={(data) => {
               setState((s) => ({ ...s, commercial: data }));
               completeFlow();
             }}
-            onBack={goBack}
+            onBack={commercialFormBack}
           />
         );
 

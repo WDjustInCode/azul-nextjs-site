@@ -8,6 +8,7 @@ export default function AltFooter() {
         <div className={styles.footerTop}>
           <div className={styles.footerBrand}>
             <div className={styles.logo}>
+              <Link href="/">
               <svg
                 className={styles.logoImage}
                 width="200"
@@ -74,13 +75,14 @@ export default function AltFooter() {
                   </g>
                 </g>
               </svg>
+              </Link>
             </div>
             <div className={styles.contactInfo}>
               <p>
                 <a href="mailto:hello@azulpools.com">hello@azulpools.com</a>
               </p>
               <p>
-                <a href="tel:18887687554">(888) 768-7554</a>
+                <a href="tel:1210-414-4771">(888) 768-7554</a>
               </p>
             </div>
           </div>
@@ -88,38 +90,38 @@ export default function AltFooter() {
           <div className={styles.footerLinks}>
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>QUICK LINKS</h3>
-              <Link href="#quote">Get a Quote</Link>
-              <Link href="/quote?step=commercial-form">Commercial Pool Service</Link>
+              <Link href="/quote">Get a Quote</Link>
+              <Link href="/quote?step=commercial-form&from=footer">Commercial Pool Service</Link>
               <Link href="#services">Pool Services</Link>
-              <Link href="#resources">Resources</Link>
-              <Link href="#reviews">Reviews</Link>
+              <span>Resources</span>
+              <span>Reviews</span>
             </div>
 
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>MAINTENANCE SERVICES</h3>
-              <Link href="#weekly-cleaning">Weekly Pool Cleaning</Link>
-              <Link href="#filter-cleaning">Pool Filter Cleaning</Link>
-              <Link href="#drain-restart">Pool Drain & Restart</Link>
-              <Link href="#algae-removal">Pool Algae Removal</Link>
-              <Link href="#hot-tub">Hot Tub Cleaning</Link>
-              <Link href="#acid-wash">Pool Acid Washing</Link>
+              <span>Weekly Pool Cleaning</span>
+              <span>Pool Filter Cleaning</span>
+              <span>Pool Drain & Restart</span>
+              <span>Pool Algae Removal</span>
+              <span>Hot Tub Cleaning</span>
+              <span>Pool Acid Washing</span>
             </div>
 
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>REPAIR SERVICES</h3>
-              <Link href="#heater-repair">Pool Heater Repair</Link>
-              <Link href="#pump-repair">Pool Pump Repair</Link>
-              <Link href="#filter-repair">Pool Filter Repair</Link>
-              <Link href="#light-repair">Pool Light Repair</Link>
-              <Link href="#automation-repair">Pool Automation Repair</Link>
+              <span>Pool Heater Repair</span>
+              <span>Pool Pump Repair</span>
+              <span>Pool Filter Repair</span>
+              <span>Pool Light Repair</span>
+              <span>Pool Automation Repair</span>
             </div>
 
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>EQUIPMENT INSTALLS</h3>
-              <Link href="#heater-install">Pool Heater Install</Link>
-              <Link href="#pump-install">Pool Pump Install</Link>
-              <Link href="#filter-install">Pool Filter Install</Link>
-              <Link href="#automation-install">Pool Automation Install</Link>
+              <span>Pool Heater Install</span>
+              <span>Pool Pump Install</span>
+              <span>Pool Filter Install</span>
+              <span>Pool Automation Install</span>
             </div>
           </div>
         </div>

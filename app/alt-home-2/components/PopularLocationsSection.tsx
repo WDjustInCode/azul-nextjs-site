@@ -244,7 +244,7 @@ export default function PopularLocationsSection() {
               <p className="azul-card-hours">Sun – Sat · 8:00 AM – 5:00 PM</p>
             </div>
             <div className="azul-card-cta">
-              <a className="azul-btn-primary" href="tel:18887687554">(888) 768-7554</a>
+              <a className="azul-btn-primary" href="tel:1210-414-4771">(888) 768-7554</a>
             </div>
           </div>
 
