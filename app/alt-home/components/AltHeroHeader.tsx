@@ -32,8 +32,8 @@ export default function AltHeroHeader() {
           <div className={styles.backdrop} onClick={closeMenu}></div>
         )}
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
-          {/* <a href="tel:18887687554" className={styles.phone} onClick={closeMenu}>
-            (888) 000-0000
+          {/* <a href="tel:12104144771" className={styles.phone} onClick={closeMenu}>
+            (210) 414-4771
           </a> */}
           <Link href="/contact" className={styles.getInTouchButton} onClick={closeMenu}>
             Get In Touch

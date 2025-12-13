@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState, useEffect } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
-} from 'react-places-autocomplete';
+} from '../lib/placesAutocomplete';
 import { isInServiceArea } from '../utils/serviceArea';
 import AltHeroHeader from './AltHeroHeader';
 import styles from './AltHero.module.css';
@@ -42,17 +42,29 @@ export default function AltHero() {
 
     // Create and load the script
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async`;
     script.async = true;
     script.defer = true;
     
     script.onload = () => {
-      if ((window as any).google?.maps?.places) {
-        setIsScriptLoaded(true);
-      } else {
-        console.error("Google Maps Places library failed to load");
-        setIsScriptLoaded(false);
-      }
+      // With loading=async, we need to wait for the library to be ready
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds total (50 * 100ms)
+      
+      const checkPlacesLibrary = () => {
+        attempts++;
+        if ((window as any).google?.maps?.places) {
+          setIsScriptLoaded(true);
+        } else if (attempts < maxAttempts) {
+          // Retry after a short delay if library isn't ready yet
+          setTimeout(checkPlacesLibrary, 100);
+        } else {
+          console.error("Google Maps Places library failed to load after multiple attempts");
+          setIsScriptLoaded(false);
+        }
+      };
+      // Start checking immediately and retry if needed
+      checkPlacesLibrary();
     };
     
     script.onerror = () => {

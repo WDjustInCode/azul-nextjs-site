@@ -62,10 +62,10 @@ export default function AltHeader() {
           <Link href="#services" className={styles.navLink} onClick={closeMenu}>
             Pool Services <span className={styles.dropdown}>▼</span>
           </Link>
-          <Link href="/quote?step=commercial-form" className={styles.navLink} onClick={closeMenu}>
+          <Link href="/quote?step=commercial-form&from=header" className={styles.navLink} onClick={closeMenu}>
             Commercial
           </Link>
-          <a href="tel:18887687554" className={styles.phone} onClick={closeMenu}>
+          <a href="tel:1210-414-4771" className={styles.phone} onClick={closeMenu}>
             (888) 000-0000
           </a>
           <Link href="/quote" className={styles.ctaButton} onClick={closeMenu}>
