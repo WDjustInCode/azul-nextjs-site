@@ -183,96 +183,102 @@ export default function AltHeader() {
           <div className={styles.backdrop} onClick={closeMenu}></div>
         )}
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
-          <div
-            className={styles.dropdownContainer}
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <Link href="/services" className={styles.navLink} onClick={closeMenu}>
-              Pool Services <span className={styles.dropdownArrow}>{isDropdownOpen ? '▲' : '▼'}</span>
-            </Link>
-            {isDropdownOpen && (
-              <div className={styles.dropdownMenu}>
-                <div className={styles.dropdownContent}>
-                  <div className={styles.dropdownColumn}>
-                    <h3 className={styles.dropdownCategory}>POOL MAINTENANCE</h3>
-                    {maintenanceServices.map((service) => (
-                      <Link
-                        key={service.id}
-                        href={service.href || '/services'}
-                        className={styles.dropdownItem}
-                        onClick={closeMenu}
-                      >
-                        <div className={styles.dropdownIcon}>
-                          <Image
-                            src={service.iconUrl}
-                            alt={service.title}
-                            width={24}
-                            height={24}
-                            unoptimized
-                          />
-                        </div>
-                        <div className={styles.dropdownText}>
-                          <span className={styles.dropdownTitle}>{service.title}</span>
-                          <span className={styles.dropdownDescription}>{service.description}</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className={styles.dropdownColumn}>
-                    <h3 className={styles.dropdownCategory}>POOL REPAIR</h3>
-                    {repairServices.map((service) => (
-                      <Link
-                        key={service.id}
-                        href={service.href || '/services'}
-                        className={styles.dropdownItem}
-                        onClick={closeMenu}
-                      >
-                        <div className={styles.dropdownIcon}>
-                          <Image
-                            src={service.iconUrl}
-                            alt={service.title}
-                            width={24}
-                            height={24}
-                            unoptimized
-                          />
-                        </div>
-                        <div className={styles.dropdownText}>
-                          <span className={styles.dropdownTitle}>{service.title}</span>
-                          <span className={styles.dropdownDescription}>{service.description}</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className={styles.dropdownColumn}>
-                    <h3 className={styles.dropdownCategory}>EQUIPMENT INSTALLATION</h3>
-                    {installationServices.map((service) => (
-                      <Link
-                        key={service.id}
-                        href={service.href || '/services'}
-                        className={styles.dropdownItem}
-                        onClick={closeMenu}
-                      >
-                        <div className={styles.dropdownIcon}>
-                          <Image
-                            src={service.iconUrl}
-                            alt={service.title}
-                            width={24}
-                            height={24}
-                            unoptimized
-                          />
-                        </div>
-                        <div className={styles.dropdownText}>
-                          <span className={styles.dropdownTitle}>{service.title}</span>
-                          <span className={styles.dropdownDescription}>{service.description}</span>
-                        </div>
-                      </Link>
-                    ))}
+          {/* Desktop dropdown - hidden in mobile menu */}
+          {!isMenuOpen && (
+            <div
+              className={styles.dropdownContainer}
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <Link href="/services" className={styles.navLink}>
+                Pool Services <span className={styles.dropdownArrow}>{isDropdownOpen ? '▲' : '▼'}</span>
+              </Link>
+              {isDropdownOpen && (
+                <div className={styles.dropdownMenu}>
+                  <div className={styles.dropdownContent}>
+                    <div className={styles.dropdownColumn}>
+                      <h3 className={styles.dropdownCategory}>POOL MAINTENANCE</h3>
+                      {maintenanceServices.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={service.href || '/services'}
+                          className={styles.dropdownItem}
+                        >
+                          <div className={styles.dropdownIcon}>
+                            <Image
+                              src={service.iconUrl}
+                              alt={service.title}
+                              width={24}
+                              height={24}
+                              unoptimized
+                            />
+                          </div>
+                          <div className={styles.dropdownText}>
+                            <span className={styles.dropdownTitle}>{service.title}</span>
+                            <span className={styles.dropdownDescription}>{service.description}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className={styles.dropdownColumn}>
+                      <h3 className={styles.dropdownCategory}>POOL REPAIR</h3>
+                      {repairServices.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={service.href || '/services'}
+                          className={styles.dropdownItem}
+                        >
+                          <div className={styles.dropdownIcon}>
+                            <Image
+                              src={service.iconUrl}
+                              alt={service.title}
+                              width={24}
+                              height={24}
+                              unoptimized
+                            />
+                          </div>
+                          <div className={styles.dropdownText}>
+                            <span className={styles.dropdownTitle}>{service.title}</span>
+                            <span className={styles.dropdownDescription}>{service.description}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className={styles.dropdownColumn}>
+                      <h3 className={styles.dropdownCategory}>EQUIPMENT INSTALLATION</h3>
+                      {installationServices.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={service.href || '/services'}
+                          className={styles.dropdownItem}
+                        >
+                          <div className={styles.dropdownIcon}>
+                            <Image
+                              src={service.iconUrl}
+                              alt={service.title}
+                              width={24}
+                              height={24}
+                              unoptimized
+                            />
+                          </div>
+                          <div className={styles.dropdownText}>
+                            <span className={styles.dropdownTitle}>{service.title}</span>
+                            <span className={styles.dropdownDescription}>{service.description}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
+          {/* Mobile menu - simple link without dropdown */}
+          {isMenuOpen && (
+            <Link href="/services" className={styles.navLink} onClick={closeMenu}>
+              Pool Services
+            </Link>
+          )}
           <Link href="/quote?step=commercial-form&from=header" className={styles.navLink} onClick={closeMenu}>
             Commercial
           </Link>

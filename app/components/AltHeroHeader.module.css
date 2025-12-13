@@ -34,8 +34,8 @@
     border-radius: 2px;
 }
 
-.hamburger:hover .hamburgerLine {
-  background-color: #0052CC;
+.hamburgerLine:hover {
+  background-color: #75bcff;
 }
 
 .nav {
@@ -347,8 +347,8 @@
     background-color: #ffffff;
   }
 
-  .hamburger:hover .hamburgerLine {
-    background-color: #0052CC;
+  .hamburgerLine:hover {
+    background-color: #75bcff;
   }
 
   .backdrop {
@@ -399,7 +399,7 @@
   .phone {
     font-size: 16px;
     width: 100%;
-    padding: 18px 24px;
+    padding: 18px 0;
     text-align: left;
     color: #002147;
   }

@@ -60,7 +60,7 @@ export default function AltHeader() {
         )}
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
           <Link href="#services" className={styles.navLink} onClick={closeMenu}>
-            Pool Services <span className={styles.dropdown}>▼</span>
+            Pool Services
           </Link>
           <Link href="/quote?step=commercial-form&from=header" className={styles.navLink} onClick={closeMenu}>
             Commercial
