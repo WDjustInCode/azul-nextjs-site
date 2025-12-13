@@ -264,7 +264,7 @@ export default function AltHeaderStatic() {
           <Link href="/quote?step=commercial-form&from=header" className={styles.navLink} onClick={closeMenu}>
             Commercial
           </Link>
-          <a href="tel:1210-414-4771" className={styles.phone} onClick={closeMenu}>
+          <a href="tel:12104144771" className={styles.phone} onClick={closeMenu}>
             (210) 414-4771
           </a>
           <Link href="/quote" className={styles.ctaButton} onClick={closeMenu}>

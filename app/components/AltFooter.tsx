@@ -79,10 +79,10 @@ export default function AltFooter() {
             </div>
             <div className={styles.contactInfo}>
               <p>
-                <a href="mailto:hello@azulpools.com">hello@azulpools.com</a>
+                <a href="mailto:hello@azulpoolservices.com">hello@azulpoolservices.com</a>
               </p>
               <p>
-                <a href="tel:1210-414-4771">(888) 768-7554</a>
+                <a href="tel:12104144771">(210) 414-4771</a>
               </p>
             </div>
           </div>
