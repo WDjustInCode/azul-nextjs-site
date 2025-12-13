@@ -349,6 +349,203 @@ export async function sendQuoteEmail({
   }
 }
 
+interface SendQuoteNotificationParams {
+  quoteData: {
+    address?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    email?: string;
+    segment?: "residential" | "commercial" | null;
+    serviceCategory?: string | null;
+    serviceCategoryOther?: string;
+    poolType?: string;
+    poolTypeOther?: string;
+    equipmentSelections?: string[];
+    equipmentOther?: string;
+    specialFlags?: {
+      aboveGroundPool?: boolean;
+      saltwaterPool?: boolean;
+      treesOverPool?: boolean;
+      otherNote?: string;
+    };
+    poolSize?: string;
+    commercial?: {
+      email: string;
+      company: string;
+      message: string;
+    };
+    pricing?: {
+      monthlyTotal?: number;
+      breakdown?: string[];
+    };
+  };
+}
+
+/**
+ * Send quote request notification email to internal team
+ */
+export async function sendQuoteNotification({
+  quoteData,
+}: SendQuoteNotificationParams): Promise<boolean> {
+  const recipientEmail = 'hello@azulpoolservices.com';
+
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[EMAIL] RESEND_API_KEY not set. Quote notification would have been sent to:', recipientEmail);
+    console.warn('[EMAIL] Quote data:', JSON.stringify(quoteData, null, 2));
+    return false;
+  }
+
+  try {
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'quotes@azulpoolservices.com';
+    const companyName = process.env.COMPANY_NAME || 'Azul Pool Services';
+
+    // Format customer name
+    const customerName = quoteData.firstName || quoteData.lastName
+      ? `${quoteData.firstName || ''} ${quoteData.lastName || ''}`.trim()
+      : 'Customer';
+
+    // Format service category
+    const serviceCategory = quoteData.serviceCategory
+      ? quoteData.serviceCategory.charAt(0).toUpperCase() + quoteData.serviceCategory.slice(1)
+      : 'Not specified';
+
+    // Format special flags
+    const flags = quoteData.specialFlags || {};
+    const specialFlagsList: string[] = [];
+    if (flags.aboveGroundPool) specialFlagsList.push('Above-ground pool');
+    if (flags.saltwaterPool) specialFlagsList.push('Saltwater pool');
+    if (flags.treesOverPool) specialFlagsList.push('Trees over pool');
+    if (flags.otherNote) specialFlagsList.push(`Other: ${flags.otherNote}`);
+
+    // Format pricing info
+    const pricingHtml = quoteData.pricing
+      ? `
+        <div style="background-color: #e7f3ff; border-left: 4px solid #0c6efd; padding: 15px; margin: 15px 0; border-radius: 4px;">
+          <h3 style="margin-top: 0; color: #0c6efd;">Pricing Estimate</h3>
+          ${quoteData.pricing.breakdown && quoteData.pricing.breakdown.length > 0
+            ? `<ul style="margin: 10px 0; padding-left: 20px;">${quoteData.pricing.breakdown.map(item => `<li>${item}</li>`).join('')}</ul>`
+            : ''}
+          ${quoteData.pricing.monthlyTotal
+            ? `<p style="margin: 10px 0 0 0;"><strong>Estimated Monthly Total: $${quoteData.pricing.monthlyTotal.toFixed(2)}</strong></p>`
+            : ''}
+        </div>
+      `
+      : '';
+
+    // Format commercial vs residential info
+    const serviceDetailsHtml = quoteData.segment === 'commercial' && quoteData.commercial
+      ? `
+        <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #002147;">Commercial Service Request</h3>
+          <p><strong>Company:</strong> ${quoteData.commercial.company}</p>
+          <p><strong>Message:</strong></p>
+          <p style="white-space: pre-wrap; background-color: #f8f9fa; padding: 10px; border-radius: 4px;">${quoteData.commercial.message}</p>
+        </div>
+      `
+      : `
+        <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #002147;">Service Details</h3>
+          <p><strong>Service Category:</strong> ${serviceCategory}${quoteData.serviceCategoryOther ? ` (${quoteData.serviceCategoryOther})` : ''}</p>
+          ${quoteData.poolType ? `<p><strong>Pool Type:</strong> ${quoteData.poolType.charAt(0).toUpperCase() + quoteData.poolType.slice(1).replace(/-/g, ' ')}${quoteData.poolTypeOther ? ` (${quoteData.poolTypeOther})` : ''}</p>` : ''}
+          ${quoteData.poolSize ? `<p><strong>Pool Size:</strong> ${quoteData.poolSize.charAt(0).toUpperCase() + quoteData.poolSize.slice(1)}</p>` : ''}
+          ${quoteData.equipmentSelections && quoteData.equipmentSelections.length > 0
+            ? `<p><strong>Equipment:</strong> ${quoteData.equipmentSelections.map(e => e.charAt(0).toUpperCase() + e.slice(1).replace(/-/g, ' ')).join(', ')}${quoteData.equipmentOther ? `, ${quoteData.equipmentOther}` : ''}</p>`
+            : ''}
+          ${specialFlagsList.length > 0
+            ? `<p><strong>Special Conditions:</strong> ${specialFlagsList.join(', ')}</p>`
+            : ''}
+        </div>
+      `;
+
+    const { error } = await resend.emails.send({
+      from: fromEmail,
+      to: recipientEmail,
+      replyTo: quoteData.email || quoteData.commercial?.email,
+      subject: `New Quote Request from ${customerName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+              <h1 style="color: #0c6efd; margin-top: 0;">New Quote Request</h1>
+              <p>A new quote request has been submitted through the website.</p>
+            </div>
+            
+            <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h2 style="color: #002147; margin-top: 0; font-size: 18px;">Customer Information</h2>
+              <p style="margin: 10px 0;"><strong>Name:</strong> ${customerName}</p>
+              <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${quoteData.email || quoteData.commercial?.email || 'N/A'}" style="color: #0052CC;">${quoteData.email || quoteData.commercial?.email || 'N/A'}</a></p>
+              ${quoteData.phone ? `<p style="margin: 10px 0;"><strong>Phone:</strong> <a href="tel:${quoteData.phone}" style="color: #0052CC;">${quoteData.phone}</a></p>` : ''}
+              ${quoteData.address ? `<p style="margin: 10px 0;"><strong>Address:</strong> ${quoteData.address}</p>` : ''}
+            </div>
+            
+            ${serviceDetailsHtml}
+            
+            ${pricingHtml}
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999;">
+              <p style="margin: 5px 0;">
+                This email was sent from the quote wizard on ${companyName} website.
+              </p>
+              <p style="margin: 5px 0;">
+                You can reply directly to this email to respond to ${customerName}.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
+      text: `
+New Quote Request
+
+A new quote request has been submitted through the website.
+
+Customer Information:
+Name: ${customerName}
+Email: ${quoteData.email || quoteData.commercial?.email || 'N/A'}
+${quoteData.phone ? `Phone: ${quoteData.phone}` : ''}
+${quoteData.address ? `Address: ${quoteData.address}` : ''}
+
+${quoteData.segment === 'commercial' && quoteData.commercial
+  ? `Commercial Service Request:
+Company: ${quoteData.commercial.company}
+Message: ${quoteData.commercial.message}`
+  : `Service Details:
+Service Category: ${serviceCategory}${quoteData.serviceCategoryOther ? ` (${quoteData.serviceCategoryOther})` : ''}
+${quoteData.poolType ? `Pool Type: ${quoteData.poolType}${quoteData.poolTypeOther ? ` (${quoteData.poolTypeOther})` : ''}` : ''}
+${quoteData.poolSize ? `Pool Size: ${quoteData.poolSize}` : ''}
+${quoteData.equipmentSelections && quoteData.equipmentSelections.length > 0 ? `Equipment: ${quoteData.equipmentSelections.join(', ')}${quoteData.equipmentOther ? `, ${quoteData.equipmentOther}` : ''}` : ''}
+${specialFlagsList.length > 0 ? `Special Conditions: ${specialFlagsList.join(', ')}` : ''}`}
+
+${quoteData.pricing
+  ? `Pricing Estimate:
+${quoteData.pricing.breakdown && quoteData.pricing.breakdown.length > 0 ? quoteData.pricing.breakdown.join('\n') : ''}
+${quoteData.pricing.monthlyTotal ? `Estimated Monthly Total: $${quoteData.pricing.monthlyTotal.toFixed(2)}` : ''}`
+  : ''}
+
+---
+This email was sent from the quote wizard on ${companyName} website.
+You can reply directly to this email to respond to ${customerName}.
+      `,
+    });
+
+    if (error) {
+      console.error('[EMAIL] Error sending quote notification:', error);
+      return false;
+    }
+
+    console.log('[EMAIL] Quote notification sent successfully to', recipientEmail);
+    return true;
+  } catch (error) {
+    console.error('[EMAIL] Exception sending quote notification:', error);
+    return false;
+  }
+}
+
 interface SendContactFormParams {
   name: string;
   email: string;
