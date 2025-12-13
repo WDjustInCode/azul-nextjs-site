@@ -52,6 +52,9 @@ function QuoteWizardContent() {
     if (stepFromUrl === "manual-address-entry") {
       return "manual-address-entry";
     }
+    if (stepFromUrl === "commercial-form") {
+      return "commercial-form";
+    }
     if (addressFromUrl) {
       return "contact-info";
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 789.14 351.78">
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="789" height="352" viewBox="0 0 789.14 351.78" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <radialGradient id="radial-gradient" cx="391.82" cy="132.19" fx="391.82" fy="132.19" r="245.54" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#bde4ff"/>
@@ -22,7 +22,7 @@
   </defs>
   <g id="Layer_4" data-name="Layer 4">
     <g>
-      <g>
+      <g shape-rendering="geometricPrecision">
         <path d="M0,346.08v-56.82c0-3.4,1.9-5.29,5.39-5.29h22.67c13.68,0,21.27,9.39,21.27,20.47s-7.69,20.47-21.27,20.47H9.99v21.17c0,2.7-2.2,4.99-4.89,4.99s-5.09-2.3-5.09-4.99ZM26.76,292.76H9.99v23.37h16.78c7.19,0,12.28-4.69,12.28-11.68s-5.09-11.68-12.28-11.68Z" style="fill: #002147;"/>
         <path d="M95.37,282.87c19.87,0,33.55,14.68,33.55,34.45s-13.68,34.45-33.55,34.45-33.55-14.68-33.55-34.45,13.68-34.45,33.55-34.45ZM95.37,291.76c-14.28,0-23.27,10.88-23.27,25.57s8.99,25.57,23.27,25.57,23.27-10.99,23.27-25.57-9.19-25.57-23.27-25.57Z" style="fill: #002147;"/>
         <path d="M176.76,282.87c19.87,0,33.55,14.68,33.55,34.45s-13.68,34.45-33.55,34.45-33.55-14.68-33.55-34.45,13.68-34.45,33.55-34.45ZM176.76,291.76c-14.28,0-23.27,10.88-23.27,25.57s8.99,25.57,23.27,25.57,23.27-10.99,23.27-25.57-9.19-25.57-23.27-25.57Z" style="fill: #002147;"/>
@@ -42,13 +42,13 @@
         <polygon points="426.64 0 426.64 0 140.07 108.61 140.07 108.61 140.19 119.13 426.67 12.37 726.01 123.94 739.21 118.94 739.21 118.94 426.64 0" style="fill: #0052cc; fill-rule: evenodd;"/>
       </g>
       <g>
-        <g style="filter: url(#drop-shadow-1);">
+        <g shape-rendering="geometricPrecision" text-rendering="geometricPrecision" style="filter: url(#drop-shadow-1);">
           <path d="M258.55,176.92h-57l-9.14,26.98h-38.95l55.26-152.74h43.08l55.26,152.74h-39.38l-9.14-26.98ZM248.98,148.2l-18.93-55.92-18.71,55.92h37.64Z" style="fill: #002147;"/>
           <path d="M358.63,173.22h52.65v30.68h-94.21v-29.59l50.48-61.14h-50.04v-30.68h92.69v29.59l-51.57,61.14Z" style="fill: #002147;"/>
           <path d="M551.62,82.49v121.41h-37.21v-16.54c-3.77,5.37-8.89,9.68-15.34,12.95-6.46,3.26-13.6,4.9-21.43,4.9-9.28,0-17.48-2.07-24.59-6.2-7.11-4.13-12.62-10.12-16.54-17.95-3.92-7.83-5.87-17.04-5.87-27.63v-70.93h36.99v65.93c0,8.13,2.1,14.43,6.31,18.93,4.21,4.5,9.86,6.74,16.97,6.74s12.98-2.25,17.19-6.74c4.21-4.49,6.31-10.8,6.31-18.93v-65.93h37.21Z" style="fill: #002147;"/>
           <path d="M615.59,42.89v161.01h-37.21V42.89h37.21Z" style="fill: #002147;"/>
         </g>
-        <polyline points="472.48 75.47 475.2 82 514.03 64.99 504.18 49.5" style="fill: #002147; filter: url(#drop-shadow-2);"/>
+        <polyline points="472.48 75.47 475.2 82 514.03 64.99 504.18 49.5" style="fill: #002147;" shape-rendering="geometricPrecision" filter="url(#drop-shadow-2)"/>
       </g>
     </g>
   </g>

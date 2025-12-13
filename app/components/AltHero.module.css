@@ -25,8 +25,6 @@
     left: 8%;
     margin-right: 8%;
     z-index: 3;
-
-    height: 70%;
     padding: 75px 75px 50px 75px;
 
     background: #ffffff;
@@ -211,6 +209,27 @@
 }
 
 @media (max-width: 768px) {
+    .hero {
+        
+        justify-content: center;
+        align-items: center;
+    }
+
+    .heroContent {
+        width: clamp(300px, 65vw, 600px);
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 40px 40px 40px;
+    }
+
+    .heroText {
+        max-width: 100%;
+        text-align: center;
+    }
+
     .logoImage {
         max-width: 100%;
     }
@@ -243,6 +262,7 @@
     }
 
     .heroContent {
+        width: clamp(300px, 70vw, 600px);
         text-align: center;
         display: flex;
         flex-direction: column;
