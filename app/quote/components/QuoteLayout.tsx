@@ -12,10 +12,10 @@ export default function QuoteLayout({ children }: { children: ReactNode }) {
             <img src="/logo_mark_dark.svg" alt="Azul logo" className={styles.logoImage} />
           </Link>
           <a
-            href="tel:18880000000"
+            href="tel:1210-414-4771"
             className={styles.phone}
           >
-            (888) 000-0000
+            (210) 414-4771
           </a>
         </div>
       </header>
