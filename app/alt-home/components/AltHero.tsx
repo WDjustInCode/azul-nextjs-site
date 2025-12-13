@@ -129,6 +129,7 @@ export default function AltHero() {
               height={174}
               className={styles.logoImage}
               priority
+              unoptimized
             />
           </div>
           <p className={styles.subtitle}>
